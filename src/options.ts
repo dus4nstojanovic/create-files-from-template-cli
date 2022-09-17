@@ -7,7 +7,9 @@ export interface Options {
   [CLIArg.FILE_NAME]: string;
   [CLIArg.DIR_PATH]: string;
   [CLIArg.TEMPLATE_PATH]: string;
-  [CLIArg.SHOULD_REPLACE]: boolean;
+  [CLIArg.SHOULD_REPLACE_FILE_CONTENT]: boolean;
+  [CLIArg.SHOULD_REPLACE_FILE_NAME]: boolean;
+  [CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED]: string;
   [CLIArg.TEXT_TO_BE_REPLACED]: string;
   [CLIArg.REPLACE_TEXT_WITH]: string;
 }
@@ -16,7 +18,9 @@ const enum CLIArg {
   FILE_NAME = "fileName",
   DIR_PATH = "dirPath",
   TEMPLATE_PATH = "templatePath",
-  SHOULD_REPLACE = "shouldReplace",
+  SHOULD_REPLACE_FILE_NAME = "shouldReplaceFileName",
+  FILE_NAME_TEXT_TO_BE_REPLACED = "fileNameTextToBeReplaced",
+  SHOULD_REPLACE_FILE_CONTENT = "shouldReplaceFileContent",
   TEXT_TO_BE_REPLACED = "textToBeReplaced",
   REPLACE_TEXT_WITH = "replaceTextWith",
   DEBUG = "debug",
@@ -25,15 +29,20 @@ const enum CLIArg {
 const CLI_ARGS_TYPE = {
   "--fileName": String,
   "--dirPath": String,
-  "--shouldUseTemplate": String,
   "--templatePath": String,
-  "--shouldReplace": String,
+  "--shouldReplaceFileName": String,
+  "--fileNameTextToBeReplaced": String,
+  "--shouldReplaceFileContent": String,
   "--textToBeReplaced": String,
   "--replaceTextWith": String,
   "--debug": String,
 };
 
-const BOOLEAN_CLI_ARGS: CLIArg[] = [CLIArg.SHOULD_REPLACE, CLIArg.DEBUG];
+const BOOLEAN_CLI_ARGS: CLIArg[] = [
+  CLIArg.SHOULD_REPLACE_FILE_CONTENT,
+  CLIArg.SHOULD_REPLACE_FILE_NAME,
+  CLIArg.DEBUG,
+];
 
 const getArgs = () => {
   const args = Object.fromEntries(
@@ -86,9 +95,19 @@ const getArg = async ({
   defaultValue?: any;
 }): Promise<Answers> => {
   answers = getAnswerFromArgs(arg, answers);
-  return answers[arg] !== undefined
-    ? answers
-    : await askCallback(arg, message, answers, defaultValue);
+  const result =
+    answers[arg] !== undefined
+      ? answers
+      : await askCallback(arg, message, answers, defaultValue);
+
+  if (arg !== CLIArg.FILE_NAME && typeof answers[arg] === "string") {
+    answers[arg] = (answers[arg] as string).replace(
+      "{fileName}",
+      answers[CLIArg.FILE_NAME]
+    );
+  }
+
+  return result;
 };
 
 const getInputArg = (
@@ -132,33 +151,67 @@ export const getOptions = async (): Promise<Options> => {
     `./${answers[CLIArg.FILE_NAME]}`
   );
 
-  answers[CLIArg.DIR_PATH] = answers[CLIArg.DIR_PATH].replace(
-    "{fileName}",
-    answers[CLIArg.FILE_NAME]
-  );
-
   answers = await getInputArg(
     CLIArg.TEMPLATE_PATH,
     "Enter template path:",
     answers
   );
 
+  // START - FILE NAME TEXT REPLACEMENT
+  const hasFileNameTextToBeReplaced = hasArg(
+    CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED
+  );
+
+  if (
+    !hasFileNameTextToBeReplaced &&
+    extractArg(CLIArg.SHOULD_REPLACE_FILE_NAME) !== false
+  ) {
+    answers = await getConfirmArg(
+      CLIArg.SHOULD_REPLACE_FILE_NAME,
+      "Should replace file name text?",
+      answers
+    );
+  } else {
+    answers = setArg(
+      CLIArg.SHOULD_REPLACE_FILE_NAME,
+      hasFileNameTextToBeReplaced,
+      answers
+    );
+  }
+
+  if (answers[CLIArg.SHOULD_REPLACE_FILE_NAME]) {
+    answers = await getInputArg(
+      CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED,
+      "Enter file name text to be replaced:",
+      answers
+    );
+  }
+  // END - FILE NAME TEXT REPLACEMENT
+
+  //START - FILE CONTENT TEXT REPLACEMENT
   const hasTextToBeReplaced = hasArg(CLIArg.TEXT_TO_BE_REPLACED);
   const shouldNotAskForReplaceTextWith =
-    extractArg(CLIArg.SHOULD_REPLACE) === true &&
+    extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) === true &&
     !hasArg(CLIArg.REPLACE_TEXT_WITH);
 
-  if (!hasTextToBeReplaced && extractArg(CLIArg.SHOULD_REPLACE) !== false) {
+  if (
+    !hasTextToBeReplaced &&
+    extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) !== false
+  ) {
     answers = await getConfirmArg(
-      CLIArg.SHOULD_REPLACE,
+      CLIArg.SHOULD_REPLACE_FILE_CONTENT,
       "Should replace text?",
       answers
     );
   } else {
-    answers = setArg(CLIArg.SHOULD_REPLACE, hasTextToBeReplaced, answers);
+    answers = setArg(
+      CLIArg.SHOULD_REPLACE_FILE_CONTENT,
+      hasTextToBeReplaced,
+      answers
+    );
   }
 
-  if (answers[CLIArg.SHOULD_REPLACE]) {
+  if (answers[CLIArg.SHOULD_REPLACE_FILE_CONTENT]) {
     answers = await getInputArg(
       CLIArg.TEXT_TO_BE_REPLACED,
       "Enter text to be replaced:",
@@ -180,6 +233,8 @@ export const getOptions = async (): Promise<Options> => {
       );
     }
   }
+
+  //END - FILE CONTENT TEXT REPLACEMENT
 
   return answers as Options;
 };

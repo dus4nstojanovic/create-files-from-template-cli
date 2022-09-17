@@ -7,7 +7,7 @@
     "build": "node esbuild",
     "start": "node ./dist/index.js",
     "create": "npm run build && npm start",
-    "start:component": "node ./dist/index.js --dirPath ./{fileName} --templatePath templates/component --textToBeReplaced FileName --shouldReplace true --debug true",
+    "start:component": "node ./dist/index.js --dirPath ./src/components/{fileName} --templatePath templates/component --fileNameTextToBeReplaced component --textToBeReplaced FileName --replaceTextWith {fileName}",
     "create:component": "npm run build && npm run start:component"
   },
   "repository": {

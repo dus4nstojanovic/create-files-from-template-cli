@@ -12,6 +12,8 @@ const info = (...message: any[]) => console.log(chalk.blue(...message));
 const error = (...message: any[]) => console.log(chalk.red(...message));
 
 const debug = (...message: any[]) =>
-  isDebug() ? console.log("🔧 [DEBUG]", ...message) : undefined;
+  isDebug()
+    ? console.log(chalk.whiteBright("🔧 [DEBUG]", ...message))
+    : undefined;
 
 export default { success, warning, info, error, log, debug };
