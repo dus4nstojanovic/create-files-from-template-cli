@@ -4,8 +4,11 @@
   "description": "A simple but powerful CLI to generate a list of files.",
   "main": "index.js",
   "scripts": {
-    "build": "spack",
-    "start": "node ./dist/index.js"
+    "build": "node esbuild",
+    "start": "node ./dist/index.js",
+    "create": "NODE_ENV=development npm run build && npm start",
+    "start:component": "node ./dist/index.js --dirPath . --templatePath templates/component --textToBeReplaced FileName --shouldReplace true",
+    "create:component": "NODE_ENV=development npm run build && npm run start:component"
   },
   "repository": {
     "type": "git",
@@ -24,7 +27,12 @@
   },
   "homepage": "https://github.com/dus4nstojanovic/create-files-cli#readme",
   "devDependencies": {
-    "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.3.1"
+    "@types/inquirer": "^9.0.1",
+    "esbuild": "^0.15.7"
+  },
+  "dependencies": {
+    "arg": "^5.0.2",
+    "chalk": "^5.0.1",
+    "inquirer": "^9.1.1"
   }
 }
