@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { getOptions } from "./options";
 import chalk from "chalk";
 import Logger from "./logger";

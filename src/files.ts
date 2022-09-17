@@ -4,8 +4,10 @@ import path from "path";
 import { promisify } from "util";
 import Logger from "./logger";
 
-const createCWDPath = (pathArg: string) =>
-  path.join(process.cwd(), ...pathArg.split("/"));
+const createPath = (pathArg: string) =>
+  pathArg.startsWith("/")
+    ? pathArg
+    : path.join(process.cwd(), ...pathArg.split("/"));
 
 const getFilesPaths = async (dirPath: string) => {
   try {
@@ -82,8 +84,8 @@ const createFile = async ({
 };
 
 export const createFiles = async (options: Options) => {
-  const templatePath = createCWDPath(options.templatePath);
-  const dirPath = createCWDPath(options.dirPath);
+  const templatePath = createPath(options.templatePath);
+  const dirPath = createPath(options.dirPath);
   const fileName = options.fileName;
 
   Logger.debug("Template path:", templatePath);

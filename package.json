@@ -1,13 +1,16 @@
 {
-  "name": "create-files-cli",
-  "version": "0.0.1",
-  "description": "A simple but powerful CLI to generate a list of files.",
+  "name": "create-files-from-templates-cli",
+  "version": "1.0.0",
+  "description": "A simple but powerful CLI to generate a list of files from templates.",
   "main": "index.js",
+  "bin": {
+    "cfft": "index.js"
+  },
   "scripts": {
     "build": "node esbuild",
-    "start": "node ./dist/index.js",
+    "start": "node ./index.js",
     "create": "npm run build && npm start",
-    "start:component": "node ./dist/index.js --dirPath ./src/components/{fileName} --templatePath templates/component --fileNameTextToBeReplaced component --textToBeReplaced FileName --replaceTextWith {fileName}",
+    "start:component": "node ./index.js --dirPath ./src/components/{fileName} --templatePath templates/component --fileNameTextToBeReplaced component --textToBeReplaced FileName --replaceTextWith {fileName}",
     "create:component": "npm run build && npm run start:component"
   },
   "repository": {
