@@ -6,9 +6,9 @@
   "scripts": {
     "build": "node esbuild",
     "start": "node ./dist/index.js",
-    "create": "NODE_ENV=development npm run build && npm start",
-    "start:component": "node ./dist/index.js --dirPath . --templatePath templates/component --textToBeReplaced FileName --shouldReplace true",
-    "create:component": "NODE_ENV=development npm run build && npm run start:component"
+    "create": "npm run build && npm start",
+    "start:component": "node ./dist/index.js --dirPath ./{fileName} --templatePath templates/component --textToBeReplaced FileName --shouldReplace true --debug true",
+    "create:component": "npm run build && npm run start:component"
   },
   "repository": {
     "type": "git",
