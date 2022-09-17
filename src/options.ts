@@ -6,7 +6,6 @@ import { isBoolean } from "./validation";
 export interface Options {
   [CLIArg.FILE_NAME]: string;
   [CLIArg.DIR_PATH]: string;
-  [CLIArg.SHOULD_USE_TEMPLATE]: boolean;
   [CLIArg.TEMPLATE_PATH]: string;
   [CLIArg.SHOULD_REPLACE]: boolean;
   [CLIArg.TEXT_TO_BE_REPLACED]: string;
@@ -16,7 +15,6 @@ export interface Options {
 const enum CLIArg {
   FILE_NAME = "fileName",
   DIR_PATH = "dirPath",
-  SHOULD_USE_TEMPLATE = "shouldUseTemplate",
   TEMPLATE_PATH = "templatePath",
   SHOULD_REPLACE = "shouldReplace",
   TEXT_TO_BE_REPLACED = "textToBeReplaced",
@@ -35,11 +33,7 @@ const CLI_ARGS_TYPE = {
   "--debug": String,
 };
 
-const BOOLEAN_CLI_ARGS: CLIArg[] = [
-  CLIArg.SHOULD_REPLACE,
-  CLIArg.SHOULD_USE_TEMPLATE,
-  CLIArg.DEBUG,
-];
+const BOOLEAN_CLI_ARGS: CLIArg[] = [CLIArg.SHOULD_REPLACE, CLIArg.DEBUG];
 
 const getArgs = () => {
   const args = Object.fromEntries(
@@ -143,25 +137,11 @@ export const getOptions = async (): Promise<Options> => {
     answers[CLIArg.FILE_NAME]
   );
 
-  const hasTemplatePath = hasArg(CLIArg.TEMPLATE_PATH);
-
-  if (!hasTemplatePath && extractArg(CLIArg.SHOULD_USE_TEMPLATE) !== false) {
-    answers = await getConfirmArg(
-      CLIArg.SHOULD_USE_TEMPLATE,
-      "Should use template?",
-      answers
-    );
-  } else {
-    answers = setArg(CLIArg.SHOULD_USE_TEMPLATE, hasTemplatePath, answers);
-  }
-
-  if (answers[CLIArg.SHOULD_USE_TEMPLATE]) {
-    answers = await getInputArg(
-      CLIArg.TEMPLATE_PATH,
-      "Enter template path:",
-      answers
-    );
-  }
+  answers = await getInputArg(
+    CLIArg.TEMPLATE_PATH,
+    "Enter template path:",
+    answers
+  );
 
   const hasTextToBeReplaced = hasArg(CLIArg.TEXT_TO_BE_REPLACED);
   const shouldNotAskForReplaceTextWith =

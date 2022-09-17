@@ -4,10 +4,12 @@ import Logger from "./logger";
 
 const run = async () => {
   try {
-    const debug = Logger.success("create-files-cli has started");
+    Logger.success("create-files-cli has started");
 
     Logger.info("retrieving options...");
+
     const options = await getOptions();
+
     Logger.success("options retrieved");
     Logger.debug("Options\n", JSON.stringify(options, undefined, 2));
 

@@ -6,5 +6,6 @@ require("esbuild")
     platform: "node",
     loader: { ".ts": "ts" },
     minify: process.env.NODE_ENV !== "development",
+    external: ["fs"],
   })
   .catch(() => process.exit(1));
