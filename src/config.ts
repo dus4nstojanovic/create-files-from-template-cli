@@ -30,7 +30,7 @@ const DEFAULT_CONFIG: Omit<Config, "path" | "folder"> = {
     {
       name: "component",
       options: {
-        [CLIArg.TEMPLATE_PATH]: "/templates/component",
+        [CLIArg.TEMPLATE_PATH]: "/cfft.templates/component",
         [CLIArg.DIR_PATH]: "./{fileName}",
         [CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED]: "component",
         [CLIArg.TEXT_TO_BE_REPLACED]: "FileName",

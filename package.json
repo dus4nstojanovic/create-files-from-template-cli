@@ -1,10 +1,10 @@
 {
   "name": "create-files-from-templates-cli",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A simple but powerful CLI to generate a list of files from templates.",
   "main": "index.js",
   "bin": {
-    "cfft": "index.js --debug"
+    "cfft": "index.js"
   },
   "scripts": {
     "build": "node esbuild",
@@ -21,7 +21,8 @@
     "CLI",
     "generate",
     "create",
-    "files"
+    "files",
+    "template"
   ],
   "author": "Dusan Stojanovic",
   "license": "ISC",

@@ -185,7 +185,7 @@ const hasArg = (arg: CLIArg) => !!extractArg(arg);
 export const getOptions = async (config: Config): Promise<Options> => {
   let answers: Answers = {};
 
-  if (!config.defaultTemplateName) {
+  if (!config.defaultTemplateName || hasArg(CLIArg.TEMPLATE_NAME)) {
     answers = await getInputArg({
       arg: CLIArg.TEMPLATE_NAME,
       message: "Enter template name:",

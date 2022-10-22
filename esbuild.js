@@ -2,10 +2,10 @@ require("esbuild")
   .build({
     entryPoints: ["src/index.ts"],
     bundle: true,
-    outdir: ".",
+    outdir: "./dist",
     platform: "node",
     loader: { ".ts": "ts" },
     minify: process.env.NODE_ENV !== "development",
-    external: ["fs", "path", "util"],
+    external: ["fs", "path", "util", "arg", "chalk", "inquirer"],
   })
   .catch(() => process.exit(1));
