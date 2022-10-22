@@ -28,15 +28,6 @@ const readFileContent = async (pathArg: string) => {
   }
 };
 
-const createFileAndWriteContent = async (pathArg: string, content: string) => {
-  try {
-    await promisify(fs.writeFile)(pathArg, content);
-  } catch (e) {
-    Logger.debug(e);
-    throw new Error(`Couldn't create file: '${pathArg}'`);
-  }
-};
-
 const createFile = async ({
   templatePath,
   dirPath,
@@ -81,6 +72,18 @@ const createFile = async ({
   await createFileAndWriteContent(filePath, fileContent);
 
   Logger.debug(`${filePath} created!`);
+};
+
+export const createFileAndWriteContent = async (
+  pathArg: string,
+  content: string
+) => {
+  try {
+    await promisify(fs.writeFile)(pathArg, content);
+  } catch (e) {
+    Logger.debug(e);
+    throw new Error(`Couldn't create file: '${pathArg}'`);
+  }
 };
 
 export const createFiles = async (options: Options) => {

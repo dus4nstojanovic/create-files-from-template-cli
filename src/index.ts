@@ -4,14 +4,19 @@ import { getOptions } from "./options";
 import chalk from "chalk";
 import Logger from "./logger";
 import { createFiles } from "./files";
+import { getConfig } from "./config";
 
 const run = async () => {
   try {
     Logger.success("create-files-cli has started");
 
+    const { config, created } = await getConfig();
+
+    if (created) return;
+
     Logger.info("Retrieving options...");
 
-    const options = await getOptions();
+    const options = await getOptions(config);
 
     Logger.success("✔ Options retrieved");
     Logger.debug("Options\n", JSON.stringify(options, undefined, 2));
