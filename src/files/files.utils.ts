@@ -1,15 +1,14 @@
-import { Options } from "./options";
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
-import Logger from "./logger";
+import Logger from "../logger";
 
-const createPath = (pathArg: string) =>
+export const createPath = (pathArg: string) =>
   pathArg.startsWith("/")
     ? pathArg
     : path.join(process.cwd(), ...pathArg.split("/"));
 
-const getFilesPaths = async (dirPath: string) => {
+export const getFilesPaths = async (dirPath: string) => {
   try {
     const files = await promisify(fs.readdir)(dirPath);
     return files.map((file) => `${dirPath}/${file}`);
@@ -19,16 +18,19 @@ const getFilesPaths = async (dirPath: string) => {
   }
 };
 
-const readFileContent = async (pathArg: string) => {
+export const createFileAndWriteContent = async (
+  pathArg: string,
+  content: string
+) => {
   try {
-    return (await promisify(fs.readFile)(pathArg)).toString();
+    await promisify(fs.writeFile)(pathArg, content);
   } catch (e) {
     Logger.debug(e);
-    throw new Error(`Couldn't read file content from path: '${pathArg}'`);
+    throw new Error(`Couldn't create file: '${pathArg}'`);
   }
 };
 
-const createFile = async ({
+export const createFile = async ({
   templatePath,
   dirPath,
   shouldReplaceFileContent,
@@ -74,45 +76,11 @@ const createFile = async ({
   Logger.debug(`${filePath} created!`);
 };
 
-export const createFileAndWriteContent = async (
-  pathArg: string,
-  content: string
-) => {
+const readFileContent = async (pathArg: string) => {
   try {
-    await promisify(fs.writeFile)(pathArg, content);
+    return (await promisify(fs.readFile)(pathArg)).toString();
   } catch (e) {
     Logger.debug(e);
-    throw new Error(`Couldn't create file: '${pathArg}'`);
+    throw new Error(`Couldn't read file content from path: '${pathArg}'`);
   }
-};
-
-export const createFiles = async (options: Options) => {
-  const templatePath = createPath(options.templatePath);
-  const dirPath = createPath(options.dirPath);
-  const fileName = options.fileName;
-
-  Logger.debug("Template path:", templatePath);
-  Logger.debug("Desctination directory path:", dirPath);
-
-  await promisify(fs.mkdir)(dirPath, { recursive: true });
-  Logger.debug("Destination directory created or has already existed"!);
-
-  const templateFilesPaths = await getFilesPaths(templatePath);
-
-  Logger.debug("Templates paths:", templateFilesPaths);
-
-  await Promise.all(
-    templateFilesPaths.map((templateFilePath) =>
-      createFile({
-        templatePath: templateFilePath,
-        dirPath,
-        fileName,
-        shouldReplaceFileContent: options.shouldReplaceFileContent,
-        shouldReplaceFileName: options.shouldReplaceFileName,
-        replaceTextWith: options.replaceTextWith,
-        textToBeReplaced: options.textToBeReplaced,
-        fileNameTextToBeReplaced: options.fileNameTextToBeReplaced,
-      })
-    )
-  );
 };
