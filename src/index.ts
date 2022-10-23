@@ -4,13 +4,13 @@ import { getOptions } from "./options";
 import chalk from "chalk";
 import Logger from "./logger";
 import { createFiles } from "./files";
-import { getConfig } from "./config";
+import { getOrCreateConfig } from "./config";
 
 const run = async () => {
   try {
     Logger.success("create-files-cli has started");
 
-    const { config, created } = await getConfig();
+    const { config, created } = await getOrCreateConfig();
 
     if (created) return;
 

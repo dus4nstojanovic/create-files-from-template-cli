@@ -3,7 +3,7 @@ import { Config, CONFIG_FILE_NAME, DEFAULT_CONFIG, findConfig } from ".";
 import { createFileAndWriteContent } from "../files";
 import logger from "../logger";
 
-export const getConfig = async (): Promise<{
+export const getOrCreateConfig = async (): Promise<{
   config: Config;
   created: boolean;
 }> => {
