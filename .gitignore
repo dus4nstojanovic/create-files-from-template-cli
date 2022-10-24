@@ -1,4 +1,4 @@
 /node_modules
 dist/index.js
-/templates
+/.cfft.templates
 cfft.config.json
