@@ -10,13 +10,7 @@ export const setArg = (arg: CLIArg, value: any, answers: Answers) => {
   return answers;
 };
 
-export const getInputArg = ({
-  arg,
-  message,
-  answers,
-  templateConfig,
-  defaultValue,
-}: {
+export const getInputArg = (args: {
   arg: CLIArg;
   message: string;
   answers: Answers;
@@ -24,21 +18,12 @@ export const getInputArg = ({
   defaultValue?: any;
 }) =>
   getArg({
-    arg,
-    message,
+    ...args,
     askCallback: askInputQuestion,
-    answers,
-    templateConfig,
-    defaultValue,
+    templateConfig: args?.templateConfig,
   });
 
-export const getConfirmArg = ({
-  arg,
-  message,
-  answers,
-  templateConfig,
-  defaultValue,
-}: {
+export const getConfirmArg = (args: {
   arg: CLIArg;
   message: string;
   answers: Answers;
@@ -46,12 +31,9 @@ export const getConfirmArg = ({
   defaultValue?: any;
 }) =>
   getArg({
-    arg,
-    message,
+    ...args,
     askCallback: askConfirmQuestion,
-    answers,
-    templateConfig,
-    defaultValue,
+    templateConfig: args?.templateConfig,
   });
 
 export const extractArg = (arg: CLIArg) => getArgs()[`--${arg}`];

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { getOptions } from "./options";
-import chalk from "chalk";
 import Logger from "./logger";
 import { createFiles } from "./files";
 import { getOrCreateConfig } from "./config";
@@ -27,7 +26,7 @@ const run = async () => {
 
     Logger.success("💪 Files created!");
   } catch (e) {
-    Logger.error(chalk.red(e));
+    Logger.error(e);
   }
 };
 

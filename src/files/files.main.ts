@@ -13,6 +13,7 @@ export const createFiles = async (options: Options) => {
   Logger.debug("Desctination directory path:", dirPath);
 
   await promisify(fs.mkdir)(dirPath, { recursive: true });
+
   Logger.debug("Destination directory created or has already existed"!);
 
   const templateFilesPaths = await getFilesPaths(templatePath);
