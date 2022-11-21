@@ -1,8 +1,11 @@
 import { Options } from "../options";
-import fs from "fs";
-import { promisify } from "util";
 import Logger from "../logger";
-import { createFile, createPath, getFilesPaths } from ".";
+import {
+  createDirectory,
+  createFileOrDirectoryFromTemplate,
+  createPath,
+  getFilesPaths,
+} from ".";
 
 export const createFiles = async (options: Options) => {
   const templatePath = createPath(options.templatePath);
@@ -12,7 +15,7 @@ export const createFiles = async (options: Options) => {
   Logger.debug("Template path:", templatePath);
   Logger.debug("Desctination directory path:", dirPath);
 
-  await promisify(fs.mkdir)(dirPath, { recursive: true });
+  await createDirectory(dirPath);
 
   Logger.debug("Destination directory created or has already existed"!);
 
@@ -22,16 +25,11 @@ export const createFiles = async (options: Options) => {
 
   await Promise.all(
     templateFilesPaths.map((templateFilePath) =>
-      createFile({
+      createFileOrDirectoryFromTemplate({
+        ...options,
         templatePath: templateFilePath,
         dirPath,
         fileName,
-        shouldReplaceFileContent: options.shouldReplaceFileContent,
-        shouldReplaceFileName: options.shouldReplaceFileName,
-        replaceTextWith: options.replaceTextWith,
-        textToBeReplaced: options.textToBeReplaced,
-        fileNameTextToBeReplaced: options.fileNameTextToBeReplaced,
-        searchAndReplaceSeparator: options.searchAndReplaceSeparator,
       })
     )
   );

@@ -2,7 +2,7 @@ import fs from "fs";
 import path, { resolve } from "path";
 import { promisify } from "util";
 import { Config, CONFIG_FILE_NAME } from ".";
-import logger from "../logger";
+import Logger from "../logger";
 
 export const findConfig = async (
   pathArg = ".",
@@ -14,12 +14,12 @@ export const findConfig = async (
 
   if (currentPath === previousPath) return null as any;
 
-  logger.debug(`Searching for config. Path: ${currentPath}`);
+  Logger.debug(`Searching for config. Path: ${currentPath}`);
 
   try {
     const file = await promisify(fs.readFile)(searchPath);
 
-    logger.debug(`Config file found: ${currentPath}`);
+    Logger.debug(`Config file found: ${currentPath}`);
 
     const config = JSON.parse(file.toString()) as Config;
     config.folder = folderPath;

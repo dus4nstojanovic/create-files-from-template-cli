@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { promisify } from "util";
 import Logger from "../logger";
+import { CLIArg, Options } from "../options";
 
 export const createPath = (pathArg: string) =>
   pathArg.startsWith("/")
@@ -30,7 +31,77 @@ export const createFileAndWriteContent = async (
   }
 };
 
-export const createFile = async ({
+export const readFileContent = async (pathArg: string): Promise<string> => {
+  try {
+    return (await promisify(fs.readFile)(pathArg)).toString();
+  } catch (e) {
+    Logger.debug(e);
+    throw new Error(`Couldn't read file content from path: '${pathArg}'`);
+  }
+};
+
+export const createDirectory = (path: string): Promise<string | undefined> => {
+  try {
+    return promisify(fs.mkdir)(path, { recursive: true });
+  } catch (e) {
+    Logger.debug(e);
+    throw new Error(`Couldn't create directory for path: '${path}'`);
+  }
+};
+
+export const isDirectory = (path: string): boolean => {
+  try {
+    return fs.lstatSync(path).isDirectory();
+  } catch (e) {
+    Logger.debug(e);
+    throw new Error(
+      `Couldn't check determine is the provided path a directory: '${path}'`
+    );
+  }
+};
+
+export const createFileOrDirectoryFromTemplate = async (args: Options) => {
+  if (isDirectory(args.templatePath)) {
+    await createDirectoryFromTemplate(args);
+    return;
+  }
+
+  await createFileFromTemplate(args);
+};
+
+const createDirectoryFromTemplate = async (args: Options): Promise<void> => {
+  const { filePath } = createFilePathAndNameFromTemplate({
+    templatePath: args.templatePath,
+    shouldReplaceFileName: args.shouldReplaceFileName,
+    fileNameTextToBeReplaced: args.fileNameTextToBeReplaced,
+    dirPath: args.dirPath,
+    fileName: args.fileName,
+  });
+
+  const { templatePath, fileName } = args;
+  Logger.debug("Creating inner directory:", filePath);
+
+  await createDirectory(filePath);
+
+  Logger.info("Inner directory created:", filePath);
+
+  const templateFilesPaths = await getFilesPaths(templatePath);
+
+  Logger.debug("Inner template paths:", templateFilesPaths);
+
+  await Promise.all(
+    templateFilesPaths.map((templateFilePath) =>
+      createFileOrDirectoryFromTemplate({
+        ...args,
+        templatePath: templateFilePath,
+        dirPath: filePath,
+        fileName,
+      })
+    )
+  );
+};
+
+const createFileFromTemplate = async ({
   templatePath,
   dirPath,
   shouldReplaceFileContent,
@@ -40,31 +111,50 @@ export const createFile = async ({
   shouldReplaceFileName,
   fileNameTextToBeReplaced,
   searchAndReplaceSeparator,
-}: {
-  templatePath: string;
-  dirPath: string;
-  fileName: string;
-  shouldReplaceFileName: boolean;
-  fileNameTextToBeReplaced: string;
-  shouldReplaceFileContent: boolean;
-  replaceTextWith: string;
-  textToBeReplaced: string;
-  searchAndReplaceSeparator: string;
-}) => {
-  const templateFileName = path.basename(templatePath);
-
-  const fileNameUpdated = shouldReplaceFileName
-    ? templateFileName.replace(
-        new RegExp(fileNameTextToBeReplaced, "g"),
-        fileName
-      )
-    : `${fileName}.${templateFileName}`;
-
-  const filePath = path.join(dirPath, fileNameUpdated);
+}: Options): Promise<void> => {
+  const { filePath, fileNameUpdated } = createFilePathAndNameFromTemplate({
+    templatePath,
+    shouldReplaceFileName,
+    fileNameTextToBeReplaced,
+    dirPath,
+    fileName,
+  });
 
   Logger.debug("Reading file:", templatePath);
 
+  const fileContent = await getFileContent({
+    templatePath,
+    textToBeReplaced,
+    replaceTextWith,
+    searchAndReplaceSeparator,
+    shouldReplaceFileContent,
+    fileName: fileNameUpdated,
+  });
+
+  await createFileAndWriteContent(filePath, fileContent);
+
+  Logger.info(`${filePath} created!`);
+};
+
+const getFileContent = async ({
+  templatePath,
+  textToBeReplaced,
+  replaceTextWith,
+  searchAndReplaceSeparator,
+  shouldReplaceFileContent,
+  fileName,
+}: Pick<
+  Options,
+  | CLIArg.TEMPLATE_PATH
+  | CLIArg.TEXT_TO_BE_REPLACED
+  | CLIArg.REPLACE_TEXT_WITH
+  | CLIArg.SEARCH_AND_REPLACE_SEPARATOR
+  | CLIArg.SHOULD_REPLACE_FILE_CONTENT
+  | CLIArg.FILE_NAME
+>): Promise<string> => {
   let fileContent = await readFileContent(templatePath);
+
+  if (!shouldReplaceFileContent) return fileContent;
 
   const textToBeReplacedSplitted = textToBeReplaced.split(
     searchAndReplaceSeparator
@@ -83,27 +173,40 @@ export const createFile = async ({
     const currentReplaceTextWith = replaceTextWithSplitted[index];
 
     Logger.debug(
-      `Replacing word ${currentToBeReplaced} with ${currentReplaceTextWith} in file ${fileNameUpdated}`
+      `Replacing word ${currentToBeReplaced} with ${currentReplaceTextWith} in file ${fileName}`
     );
 
-    fileContent = shouldReplaceFileContent
-      ? fileContent.replace(
-          new RegExp(currentToBeReplaced, "g"),
-          currentReplaceTextWith
-        )
-      : fileContent;
+    fileContent = fileContent.replace(
+      new RegExp(currentToBeReplaced, "g"),
+      currentReplaceTextWith
+    );
   });
 
-  await createFileAndWriteContent(filePath, fileContent);
-
-  Logger.debug(`${filePath} created!`);
+  return fileContent;
 };
 
-const readFileContent = async (pathArg: string) => {
-  try {
-    return (await promisify(fs.readFile)(pathArg)).toString();
-  } catch (e) {
-    Logger.debug(e);
-    throw new Error(`Couldn't read file content from path: '${pathArg}'`);
-  }
+const createFilePathAndNameFromTemplate = ({
+  templatePath,
+  shouldReplaceFileName,
+  fileNameTextToBeReplaced,
+  fileName,
+  dirPath,
+}: Pick<
+  Options,
+  | CLIArg.TEMPLATE_PATH
+  | CLIArg.SHOULD_REPLACE_FILE_NAME
+  | CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED
+  | CLIArg.DIR_PATH
+  | CLIArg.FILE_NAME
+>): { filePath: string; fileNameUpdated: string } => {
+  const templateFileName = path.basename(templatePath);
+
+  const fileNameUpdated = shouldReplaceFileName
+    ? templateFileName.replace(
+        new RegExp(fileNameTextToBeReplaced, "g"),
+        fileName
+      )
+    : `${fileName}.${templateFileName}`;
+
+  return { filePath: path.join(dirPath, fileNameUpdated), fileNameUpdated };
 };

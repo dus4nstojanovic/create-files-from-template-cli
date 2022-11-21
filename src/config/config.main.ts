@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import { Config, CONFIG_FILE_NAME, DEFAULT_CONFIG, findConfig } from ".";
 import { createFileAndWriteContent } from "../files";
-import logger from "../logger";
+import Logger from "../logger";
 
 export const getOrCreateConfig = async (): Promise<{
   config: Config;
@@ -11,7 +11,7 @@ export const getOrCreateConfig = async (): Promise<{
 
   if (!config) {
     try {
-      logger.info(
+      Logger.info(
         `Couldn't find ${CONFIG_FILE_NAME}. Creating configuration...`
       );
 
@@ -20,15 +20,15 @@ export const getOrCreateConfig = async (): Promise<{
         JSON.stringify(DEFAULT_CONFIG, undefined, 2)
       );
 
-      logger.success(
+      Logger.success(
         `⚙️  ${CONFIG_FILE_NAME} config file has been created: '${resolve(
           "."
         )}'`
       );
+
       return { config: await findConfig(), created: true };
     } catch (e) {
-      logger.error("Error creating config file");
-
+      Logger.error("Error creating config file");
       throw e;
     }
   }
