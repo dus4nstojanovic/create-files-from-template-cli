@@ -1,25 +1,40 @@
+import { isDirectory } from "./files.utils";
 import { Options } from "../options";
 import Logger from "../logger";
 import {
   createDirectory,
   createFileOrDirectoryFromTemplate,
   createPath,
-  getFilesPaths,
+  getInnerDirectoriesAndFilesPaths,
 } from ".";
 
-export const createFiles = async (options: Options) => {
+/**
+ * Creates all directories and files using the provided options
+ * @param options The options for the files and folders creation
+ */
+export const createAllDirectoriesAndFilesFromTemplate = async (
+  options: Options
+) => {
   const templatePath = createPath(options.templatePath);
+
+  Logger.debug("Template path:", templatePath);
+
+  if (!isDirectory(templatePath)) {
+    throw new Error("templatePath must be a directory!");
+  }
+
   const dirPath = createPath(options.dirPath);
   const fileName = options.fileName;
 
-  Logger.debug("Template path:", templatePath);
   Logger.debug("Desctination directory path:", dirPath);
 
   await createDirectory(dirPath);
 
-  Logger.debug("Destination directory created or has already existed"!);
+  Logger.debug("Destination directory created or has already existed!");
 
-  const templateFilesPaths = await getFilesPaths(templatePath);
+  const templateFilesPaths = await getInnerDirectoriesAndFilesPaths(
+    templatePath
+  );
 
   Logger.debug("Templates paths:", templateFilesPaths);
 

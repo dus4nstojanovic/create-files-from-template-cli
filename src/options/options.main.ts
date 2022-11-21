@@ -11,6 +11,16 @@ import {
   setArg,
 } from ".";
 
+/**
+ * Checks is the debug argument provided or not
+ */
+export const isDebug = (): boolean => extractArg(CLIArg.DEBUG) as boolean;
+
+/**
+ * Gets all option using the provided configuration, console arguments or inputs
+ * @param config The configuration read from the cfft.config.json file
+ * @returns All provided options
+ */
 export const getOptions = async (config: Config): Promise<Options> => {
   let answers: Answers = {};
 
@@ -35,8 +45,6 @@ export const getOptions = async (config: Config): Promise<Options> => {
 
   return answers as Options;
 };
-
-export const isDebug = (): boolean => extractArg(CLIArg.DEBUG) as boolean;
 
 const getTemplateName = async ({
   config,

@@ -4,6 +4,12 @@ import { promisify } from "util";
 import { Config, CONFIG_FILE_NAME } from ".";
 import Logger from "../logger";
 
+/**
+ * Searches for the configuration file. If the file isn't found, searches in the parent directory
+ * @param pathArg The path of the configuration file
+ * @param previousPath The previous (parent) path
+ * @returns The parsed configuration file (used in the recursion)
+ */
 export const findConfig = async (
   pathArg = ".",
   previousPath?: string

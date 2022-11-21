@@ -19,6 +19,7 @@ export type Config = {
   folder: string;
 };
 
+// This object will be used for the default configuration in the cfft.config.json file
 export const DEFAULT_CONFIG: Omit<Config, "path" | "folder"> = {
   defaultTemplateName: "component",
   templates: [

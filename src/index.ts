@@ -2,7 +2,7 @@
 
 import { getOptions } from "./options";
 import Logger from "./logger";
-import { createFiles } from "./files";
+import { createAllDirectoriesAndFilesFromTemplate } from "./files";
 import { getOrCreateConfig } from "./config";
 
 const run = async () => {
@@ -22,7 +22,7 @@ const run = async () => {
 
     Logger.info("Creating files...");
 
-    await createFiles(options);
+    await createAllDirectoriesAndFilesFromTemplate(options);
 
     Logger.success("💪 Files created!");
   } catch (e) {
