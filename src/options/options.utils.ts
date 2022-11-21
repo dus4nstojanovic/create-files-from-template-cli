@@ -112,7 +112,7 @@ const getArg = async ({
 
   if (arg !== CLIArg.FILE_NAME && typeof answers[arg] === "string") {
     answers[arg] = (answers[arg] as string).replace(
-      "{fileName}",
+      new RegExp("{fileName}", "g"),
       answers[CLIArg.FILE_NAME]
     );
   }

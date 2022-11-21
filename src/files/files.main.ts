@@ -31,6 +31,7 @@ export const createFiles = async (options: Options) => {
         replaceTextWith: options.replaceTextWith,
         textToBeReplaced: options.textToBeReplaced,
         fileNameTextToBeReplaced: options.fileNameTextToBeReplaced,
+        searchAndReplaceSeparator: options.searchAndReplaceSeparator,
       })
     )
   );

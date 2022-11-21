@@ -39,6 +39,7 @@ export const createFile = async ({
   fileName,
   shouldReplaceFileName,
   fileNameTextToBeReplaced,
+  searchAndReplaceSeparator,
 }: {
   templatePath: string;
   dirPath: string;
@@ -48,6 +49,7 @@ export const createFile = async ({
   shouldReplaceFileContent: boolean;
   replaceTextWith: string;
   textToBeReplaced: string;
+  searchAndReplaceSeparator: string;
 }) => {
   const templateFileName = path.basename(templatePath);
 
@@ -64,12 +66,33 @@ export const createFile = async ({
 
   let fileContent = await readFileContent(templatePath);
 
-  Logger.debug(
-    `Replacing word ${textToBeReplaced} with ${replaceTextWith} in file ${fileNameUpdated}`
+  const textToBeReplacedSplitted = textToBeReplaced.split(
+    searchAndReplaceSeparator
   );
-  fileContent = shouldReplaceFileContent
-    ? fileContent.replace(new RegExp(textToBeReplaced, "g"), replaceTextWith)
-    : fileContent;
+  const replaceTextWithSplitted = replaceTextWith.split(
+    searchAndReplaceSeparator
+  );
+
+  if (textToBeReplacedSplitted.length !== replaceTextWithSplitted.length) {
+    throw new Error(
+      "textToBeReplaced and replaceTextWith arguments length mismatch!"
+    );
+  }
+
+  textToBeReplacedSplitted.forEach((currentToBeReplaced, index) => {
+    const currentReplaceTextWith = replaceTextWithSplitted[index];
+
+    Logger.debug(
+      `Replacing word ${currentToBeReplaced} with ${currentReplaceTextWith} in file ${fileNameUpdated}`
+    );
+
+    fileContent = shouldReplaceFileContent
+      ? fileContent.replace(
+          new RegExp(currentToBeReplaced, "g"),
+          currentReplaceTextWith
+        )
+      : fileContent;
+  });
 
   await createFileAndWriteContent(filePath, fileContent);
 

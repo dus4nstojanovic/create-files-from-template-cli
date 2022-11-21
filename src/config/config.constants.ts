@@ -32,6 +32,7 @@ export const DEFAULT_CONFIG: Omit<Config, "path" | "folder"> = {
         [CLIArg.REPLACE_TEXT_WITH]: "{fileName}",
         [CLIArg.SHOULD_REPLACE_FILE_CONTENT]: true,
         [CLIArg.SHOULD_REPLACE_FILE_NAME]: true,
+        [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: ";",
       },
     },
   ],

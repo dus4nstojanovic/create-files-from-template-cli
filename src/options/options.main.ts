@@ -31,6 +31,8 @@ export const getOptions = async (config: Config): Promise<Options> => {
 
   answers = await getFileContentTextReplacement({ templateConfig, answers });
 
+  answers = getSearchAndReplaceCharater({ templateConfig, answers });
+
   return answers as Options;
 };
 
@@ -209,6 +211,21 @@ const getFileContentTextReplacement = async ({
       );
     }
   }
+
+  return answers;
+};
+
+const getSearchAndReplaceCharater = ({
+  templateConfig,
+  answers,
+}: {
+  templateConfig: TemplateConfig;
+  answers: Answers;
+}): Answers => {
+  answers[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] =
+    (extractArg(CLIArg.SEARCH_AND_REPLACE_SEPARATOR) as string) ||
+    templateConfig.options[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] ||
+    ";";
 
   return answers;
 };

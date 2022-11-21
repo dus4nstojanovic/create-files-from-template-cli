@@ -8,6 +8,7 @@ export interface Options {
   [CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED]: string;
   [CLIArg.TEXT_TO_BE_REPLACED]: string;
   [CLIArg.REPLACE_TEXT_WITH]: string;
+  [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: string;
 }
 
 export const enum CLIArg {
@@ -20,6 +21,7 @@ export const enum CLIArg {
   SHOULD_REPLACE_FILE_CONTENT = "shouldReplaceFileContent",
   TEXT_TO_BE_REPLACED = "textToBeReplaced",
   REPLACE_TEXT_WITH = "replaceTextWith",
+  SEARCH_AND_REPLACE_SEPARATOR = "searchAndReplaceSeparator",
   DEBUG = "debug",
 }
 
@@ -33,6 +35,7 @@ export const CLI_ARGS_TYPE = {
   "--shouldReplaceFileContent": String,
   "--textToBeReplaced": String,
   "--replaceTextWith": String,
+  "--searchAndReplaceSeparator": String,
   "--debug": String,
 };
 
