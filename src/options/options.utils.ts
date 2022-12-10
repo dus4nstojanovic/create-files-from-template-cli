@@ -104,7 +104,8 @@ const getAnswerFromConfig = (
   templateConfig: TemplateConfig | undefined,
   answers: Answers
 ): Answers => {
-  const configValue = templateConfig?.options?.[arg];
+  const configValue =
+    templateConfig?.options?.[arg as keyof typeof templateConfig.options];
 
   if (configValue) {
     answers[arg] = configValue;

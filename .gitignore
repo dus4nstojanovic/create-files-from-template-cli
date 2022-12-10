@@ -2,3 +2,4 @@
 dist/index.js
 /.cfft.templates
 cfft.config.json
+/.vscode

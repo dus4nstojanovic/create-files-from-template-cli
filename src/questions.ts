@@ -1,5 +1,5 @@
 import inquirer, { Answers, Question } from "inquirer";
-import { isNotEmptyString } from "./validation";
+import { isNonEmptyString } from "./validation";
 
 /**
  * Asks the input (text) question
@@ -20,7 +20,7 @@ export const askInputQuestion = (
       type: "input",
       name,
       message,
-      validate: isNotEmptyString,
+      validate: isNonEmptyString,
       default: defaultValue,
     },
     answers
