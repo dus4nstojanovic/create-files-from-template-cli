@@ -64,9 +64,11 @@ export const readFileContent = async (pathArg: string): Promise<string> => {
  * Creates a directory on the specified path
  * @param path The path to the directory
  */
-export const createDirectory = (path: string): Promise<string | undefined> => {
+export const createDirectory = async (
+  path: string
+): Promise<string | undefined> => {
   try {
-    return promisify(fs.mkdir)(path, { recursive: true });
+    return await promisify(fs.mkdir)(path, { recursive: true });
   } catch (e) {
     Logger.debug(e);
     throw new Error(`Couldn't create directory for path: '${path}'`);
@@ -84,7 +86,7 @@ export const isDirectory = (path: string): boolean => {
   } catch (e) {
     Logger.debug(e);
     throw new Error(
-      `Couldn't check determine is the provided path a directory: '${path}'`
+      `Couldn't determine if the provided path is a directory: '${path}'`
     );
   }
 };

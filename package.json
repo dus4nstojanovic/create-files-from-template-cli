@@ -7,8 +7,8 @@
     "cfft-dev": "dist/index.js"
   },
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "env APP_ENV=test jest --runInBand",
+    "test:watch": "env APP_ENV=test jest --watch --runInBand",
     "build": "node esbuild",
     "start": "node ./index.js",
     "create": "npm run build && npm start",

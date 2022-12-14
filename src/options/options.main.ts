@@ -170,7 +170,7 @@ const getFileContentTextReplacement = async ({
 }): Promise<Answers> => {
   const hasTextToBeReplaced =
     hasArg(CLIArg.TEXT_TO_BE_REPLACED) ||
-    templateConfig.options[CLIArg.TEXT_TO_BE_REPLACED];
+    !!templateConfig.options[CLIArg.TEXT_TO_BE_REPLACED];
 
   const shouldNotAskForReplaceTextWith =
     extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) === true &&

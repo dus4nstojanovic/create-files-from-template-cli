@@ -81,7 +81,6 @@ const getArgs = (): Answers => {
       value === "true" ? true : value === "false" ? false : value,
     ])
   );
-
   BOOLEAN_CLI_ARGS.forEach((booleanArg) => {
     if (args[booleanArg] && !isBoolean(args[booleanArg])) {
       throw new Error(

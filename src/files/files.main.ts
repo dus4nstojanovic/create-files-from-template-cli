@@ -14,7 +14,7 @@ import {
  */
 export const createAllDirectoriesAndFilesFromTemplate = async (
   options: Options
-) => {
+): Promise<void> => {
   const templatePath = createPath(options.templatePath);
 
   Logger.debug("Template path:", templatePath);
