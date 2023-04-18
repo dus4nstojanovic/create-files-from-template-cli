@@ -129,12 +129,13 @@ const getFileNameTextReplacement = async ({
 }): Promise<Answers> => {
   const hasFileNameTextToBeReplaced =
     hasArg(CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED) ||
-    templateConfig.options[CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED];
+    templateConfig.options?.[CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED];
 
-  if (
-    !hasFileNameTextToBeReplaced &&
-    extractArg(CLIArg.SHOULD_REPLACE_FILE_NAME) !== false
-  ) {
+  const shouldAskForReplaceFileName =
+    extractArg(CLIArg.SHOULD_REPLACE_FILE_NAME) !== false &&
+    templateConfig.options?.[CLIArg.SHOULD_REPLACE_FILE_NAME] !== false;
+
+  if (!hasFileNameTextToBeReplaced && shouldAskForReplaceFileName) {
     answers = await getConfirmArg({
       arg: CLIArg.SHOULD_REPLACE_FILE_NAME,
       message: "Should replace file name text?",
@@ -170,17 +171,18 @@ const getFileContentTextReplacement = async ({
 }): Promise<Answers> => {
   const hasTextToBeReplaced =
     hasArg(CLIArg.TEXT_TO_BE_REPLACED) ||
-    !!templateConfig.options[CLIArg.TEXT_TO_BE_REPLACED];
+    !!templateConfig.options?.[CLIArg.TEXT_TO_BE_REPLACED];
+
+  const shouldAskForReplaceFileContent =
+    templateConfig.options?.[CLIArg.SHOULD_REPLACE_FILE_CONTENT] !== false &&
+    extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) !== false;
 
   const shouldNotAskForReplaceTextWith =
     extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) === true &&
     (!hasArg(CLIArg.REPLACE_TEXT_WITH) ||
-      !templateConfig.options[CLIArg.REPLACE_TEXT_WITH]);
+      !templateConfig.options?.[CLIArg.REPLACE_TEXT_WITH]);
 
-  if (
-    !hasTextToBeReplaced &&
-    extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) !== false
-  ) {
+  if (!hasTextToBeReplaced && shouldAskForReplaceFileContent) {
     answers = await getConfirmArg({
       arg: CLIArg.SHOULD_REPLACE_FILE_CONTENT,
       message: "Should replace text?",
@@ -232,7 +234,7 @@ const getSearchAndReplaceCharater = ({
 }): Answers => {
   answers[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] =
     (extractArg(CLIArg.SEARCH_AND_REPLACE_SEPARATOR) as string) ||
-    templateConfig.options[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] ||
+    templateConfig.options?.[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] ||
     ";";
 
   return answers;

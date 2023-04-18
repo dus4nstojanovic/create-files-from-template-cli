@@ -1,6 +1,6 @@
 {
   "name": "create-files-from-templates-cli",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "A simple but powerful CLI to generate a list of files from templates.",
   "main": "index.js",
   "bin": {
@@ -9,11 +9,7 @@
   "scripts": {
     "test": "env APP_ENV=test jest --runInBand",
     "test:watch": "env APP_ENV=test jest --watch --runInBand",
-    "build": "node esbuild",
-    "start": "node ./index.js",
-    "create": "npm run build && npm start",
-    "start:component": "node ./index.js --dirPath ./src/components/{fileName} --templatePath templates/component --fileNameTextToBeReplaced component --textToBeReplaced FileName --replaceTextWith {fileName}",
-    "create:component": "npm run build && npm run start:component"
+    "build": "node esbuild"
   },
   "repository": {
     "type": "git",
@@ -27,7 +23,7 @@
     "template"
   ],
   "author": "Dusan Stojanovic",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/dus4nstojanovic/create-files-cli/issues"
   },

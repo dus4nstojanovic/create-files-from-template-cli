@@ -18,7 +18,7 @@
     "template"
   ],
   "author": "Dusan Stojanovic",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/dus4nstojanovic/create-files-cli/issues"
   },

@@ -246,7 +246,7 @@ const createFilePathAndNameFromTemplate = ({
         new RegExp(fileNameTextToBeReplaced, "g"),
         fileName
       )
-    : `${fileName}.${templateFileName}`;
+    : templateFileName;
 
   return { filePath: path.join(dirPath, fileNameUpdated), fileNameUpdated };
 };
