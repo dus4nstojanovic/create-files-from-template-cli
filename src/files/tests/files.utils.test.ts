@@ -268,19 +268,19 @@ describe("createFileOrDirectoryFromTemplate", () => {
       expect.any(Function)
     );
     expect(fs.mkdir).toHaveBeenCalledWith(
-      `test-dir/test-file.template-dir`,
+      `test-dir/template-dir`,
       { recursive: true },
       expect.any(Function)
     );
     expect(fs.writeFile).toHaveBeenNthCalledWith(
       1,
-      "test-dir/test-file.template-dir/test-file.file1.js",
+      "test-dir/template-dir/file1.js",
       "This is a test file.",
       expect.any(Function)
     );
     expect(fs.writeFile).toHaveBeenNthCalledWith(
       2,
-      "test-dir/test-file.template-dir/test-file.file2.js",
+      "test-dir/template-dir/file2.js",
       "This is a test file.",
       expect.any(Function)
     );
@@ -301,7 +301,7 @@ describe("createFileOrDirectoryFromTemplate", () => {
       expect.anything()
     );
     expect(fs.writeFile).toHaveBeenCalledWith(
-      `test-dir/test-file.template-dir`,
+      `test-dir/template-dir`,
       "This is a test file.",
       expect.any(Function)
     );
