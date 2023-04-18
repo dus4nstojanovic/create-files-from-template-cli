@@ -207,9 +207,7 @@ _If you were following the previous example, remove the MyFile folder._
 cfft
 ```
 
-3. Enter the file name: `MyFile`
-
-4. Answer questions:
+3. Answer questions:
 
 ```sh
 ? Enter template name: component
@@ -223,7 +221,7 @@ cfft
 ? Replace text with: MyFile
 ```
 
-5. The CLI will create files using the provided options.
+4. The CLI will create files using the provided options.
 
 ## Filling the missing configuration options using the CLI arguments
 
