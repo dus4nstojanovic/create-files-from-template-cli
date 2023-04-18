@@ -1,5 +1,6 @@
 /node_modules
 dist/index.js
+dist/README.md
 /.cfft.templates
 cfft.config.json
 /.vscode

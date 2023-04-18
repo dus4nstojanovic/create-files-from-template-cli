@@ -1,15 +1,16 @@
 {
   "name": "create-files-from-templates-cli",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A simple but powerful CLI to generate a list of files from templates.",
   "main": "index.js",
   "bin": {
     "cfft-dev": "dist/index.js"
   },
   "scripts": {
+    "copy-readme": "node _scripts/copy-readme",
     "test": "env APP_ENV=test jest --runInBand",
     "test:watch": "env APP_ENV=test jest --watch --runInBand",
-    "build": "node esbuild"
+    "build": "node esbuild && npm run copy-readme"
   },
   "repository": {
     "type": "git",
