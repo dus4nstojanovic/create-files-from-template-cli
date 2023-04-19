@@ -24,6 +24,13 @@ export const enum CLIArg {
   SEARCH_AND_REPLACE_SEPARATOR = "searchAndReplaceSeparator",
   DEBUG = "debug",
   VERSION = "version",
+  HELP = "help",
+}
+
+export const enum CLIArgAlias {
+  FILE_NAME = "n",
+  TEMPLATE_NAME = "t",
+  VERSION = "v",
 }
 
 export const CLI_ARGS_TYPE = {
@@ -39,6 +46,7 @@ export const CLI_ARGS_TYPE = {
   "--searchAndReplaceSeparator": String,
   "--debug": String,
   "--version": Boolean,
+  "--help": Boolean,
 
   // Aliases
   "-n": "--fileName",

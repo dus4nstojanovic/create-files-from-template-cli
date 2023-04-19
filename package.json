@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/dus4nstojanovic/create-files-cli#readme",
   "devDependencies": {
+    "@types/cli-table": "^0.3.1",
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.0",
     "esbuild": "^0.17.17",
@@ -39,6 +40,7 @@
   "dependencies": {
     "arg": "^5.0.2",
     "chalk": "^5.2.0",
+    "cli-table": "^0.3.11",
     "inquirer": "^9.1.5"
   }
 }

@@ -398,20 +398,22 @@ The **main.scss**, will be exactly the same, since we were not replacing the fil
 
 ## Options
 
-| **Description**                                                                  | **Command**               | **Default**                | **CLI** | **cfft.config** |
-| :------------------------------------------------------------------------------- | :------------------------ | :------------------------- | :-----: | :-------------: |
-| **File name to be used**                                                         | fileName                  |                            |    ✓    |       ❌        |
-| **Path to the location where to generate files**                                 | dirPath                   | ./{fileName}               |    ✓    |        ✓        |
-| **Name of the template to use**                                                  | template                  |                            |    ✓    |       ❌        |
-| **Path to the specific template folder**                                         | templatePath              | /.cfft.templates/component |    ✓    |        ✓        |
-| **Default template name to be used every time when --template is not specified** | defaultTemplateName       | component                  |   ❌    |        ✓        |
-| **Should or not CLI replace a file name**                                        | shouldReplaceFileName     | true                       |    ✓    |        ✓        |
-| **Wich part of the file name should be replaced**                                | fileNameTextToBeReplaced  | component                  |    ✓    |        ✓        |
-| **Should or not CLI replace a file content**                                     | shouldReplaceFileContent  | true                       |    ✓    |        ✓        |
-| **Text to be replaced separated by a search and replace separator**              | textToBeReplaced          | FileName                   |    ✓    |        ✓        |
-| **Text to be used for search and replace separated by a separator**              | replaceTextWith           | {fileName}                 |    ✓    |        ✓        |
-| **Custom separator for search and replace**                                      | searchAndReplaceSeparator | ;                          |    ✓    |        ✓        |
-| **Show additional logs**                                                         | debug                     |                            |    ✓    |       ❌        |
+| **Description**                                                                  | **Command**               | **Alias** | **Default**                | **CLI** | **cfft.config** |
+| :------------------------------------------------------------------------------- | :------------------------ | :-------: | :------------------------- | :-----: | :-------------: |
+| **File name to be used**                                                         | fileName                  |    -n     |                            |    ✓    |       ❌        |
+| **Path to the location where to generate files**                                 | dirPath                   |           | ./{fileName}               |    ✓    |        ✓        |
+| **Name of the template to use**                                                  | template                  |    -t     |                            |    ✓    |       ❌        |
+| **Path to the specific template folder**                                         | templatePath              |           | /.cfft.templates/component |    ✓    |        ✓        |
+| **Default template name to be used every time when --template is not specified** | defaultTemplateName       |           | component                  |   ❌    |        ✓        |
+| **Should or not CLI replace a file name**                                        | shouldReplaceFileName     |           | true                       |    ✓    |        ✓        |
+| **Wich part of the file name should be replaced**                                | fileNameTextToBeReplaced  |           | component                  |    ✓    |        ✓        |
+| **Should or not CLI replace a file content**                                     | shouldReplaceFileContent  |           | true                       |    ✓    |        ✓        |
+| **Text to be replaced separated by a search and replace separator**              | textToBeReplaced          |           | FileName                   |    ✓    |        ✓        |
+| **Text to be used for search and replace separated by a separator**              | replaceTextWith           |           | {fileName}                 |    ✓    |        ✓        |
+| **Custom separator for search and replace**                                      | searchAndReplaceSeparator |           | ;                          |    ✓    |        ✓        |
+| **Show additional logs**                                                         | debug                     |           |                            |    ✓    |       ❌        |
+| **See the package version**                                                      | --version                 |    -v     |                            |    ✓    |       ❌        |
+| **Get help**                                                                     | --help                    |           |                            |    ✓    |       ❌        |
 
 > Note: When specifing an option in a terminal, always add _--_ as prefix. Example:
 

@@ -4,11 +4,17 @@ import { CLIArg, extractArg, getOptions } from "./options";
 import Logger from "./logger";
 import { createAllDirectoriesAndFilesFromTemplate } from "./files";
 import { getOrCreateConfig } from "./config";
+import { writeHelpTable } from "./help";
 
 const run = async () => {
   try {
     if (extractArg(CLIArg.VERSION)) {
       console.log(require("./package.json").version);
+      return;
+    }
+
+    if (extractArg(CLIArg.HELP)) {
+      writeHelpTable();
       return;
     }
 
