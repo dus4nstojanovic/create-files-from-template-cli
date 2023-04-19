@@ -21,7 +21,14 @@
     "generate",
     "create",
     "files",
-    "template"
+    "template",
+    "templates",
+    "scaffolding",
+    "bootstrap",
+    "boilerplate",
+    "skeleton",
+    "replace",
+    "search"
   ],
   "author": "Dusan Stojanovic",
   "license": "MIT",
