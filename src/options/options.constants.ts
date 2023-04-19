@@ -23,6 +23,7 @@ export const enum CLIArg {
   REPLACE_TEXT_WITH = "replaceTextWith",
   SEARCH_AND_REPLACE_SEPARATOR = "searchAndReplaceSeparator",
   DEBUG = "debug",
+  VERSION = "version",
 }
 
 export const CLI_ARGS_TYPE = {
@@ -37,6 +38,12 @@ export const CLI_ARGS_TYPE = {
   "--replaceTextWith": String,
   "--searchAndReplaceSeparator": String,
   "--debug": String,
+  "--version": Boolean,
+
+  // Aliases
+  "-n": "--fileName",
+  "-t": "--template",
+  "-v": "--version",
 };
 
 export const BOOLEAN_CLI_ARGS: CLIArg[] = [

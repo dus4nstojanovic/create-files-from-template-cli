@@ -1,12 +1,17 @@
 #!/usr/bin/env node
 
-import { getOptions } from "./options";
+import { CLIArg, extractArg, getOptions } from "./options";
 import Logger from "./logger";
 import { createAllDirectoriesAndFilesFromTemplate } from "./files";
 import { getOrCreateConfig } from "./config";
 
 const run = async () => {
   try {
+    if (extractArg(CLIArg.VERSION)) {
+      console.log(require("./package.json").version);
+      return;
+    }
+
     Logger.success("create-files-cli has started");
 
     const { config, created } = await getOrCreateConfig();
