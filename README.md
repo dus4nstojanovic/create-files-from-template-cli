@@ -383,7 +383,7 @@ _main.scss_
 4. Execute the **cfft** command:
 
 ```sh
-cfft-dev --template css --fileName my-styles
+cfft --template css --fileName my-styles
 ```
 
 5. The CFFT CLI will generate the following folder and file in your _src_ folder:
