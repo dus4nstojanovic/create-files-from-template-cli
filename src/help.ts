@@ -49,6 +49,11 @@ export const writeHelpTable = () => {
       "Custom separator for search and replace",
     ],
     [
+      "searchAndReplace",
+      "",
+      "Add additional search and replace items throug config (with extended options)",
+    ],
+    [
       CLIArg.VERSION,
       CLIArgAlias.VERSION,
       "Show the current version of the package",

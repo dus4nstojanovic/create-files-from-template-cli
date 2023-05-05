@@ -1,3 +1,5 @@
+import { SearchAndReplaceItem } from "../config";
+
 export interface Options {
   [CLIArg.TEMPLATE_NAME]: string;
   [CLIArg.FILE_NAME]: string;
@@ -9,6 +11,8 @@ export interface Options {
   [CLIArg.TEXT_TO_BE_REPLACED]: string;
   [CLIArg.REPLACE_TEXT_WITH]: string;
   [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: string;
+  searchAndReplace: SearchAndReplaceItem[];
+  configDir: string;
 }
 
 export const enum CLIArg {

@@ -3,6 +3,11 @@ import path from "path";
 import { promisify } from "util";
 import Logger from "../logger";
 import { CLIArg, Options } from "../options";
+import { SearchAndReplaceItem } from "../config";
+import {
+  DEFAULT_REPLACE_TEXT_WITH_ORDER,
+  DEFAULT_SEARCH_AND_REPLACE_ORDER,
+} from "../constants";
 
 /**
  * Adjusts the provided path
@@ -151,6 +156,8 @@ const createFileFromTemplate = async ({
   shouldReplaceFileName,
   fileNameTextToBeReplaced,
   searchAndReplaceSeparator,
+  searchAndReplace,
+  configDir,
 }: Options): Promise<void> => {
   const { filePath, fileNameUpdated } = createFilePathAndNameFromTemplate({
     templatePath,
@@ -169,6 +176,8 @@ const createFileFromTemplate = async ({
     searchAndReplaceSeparator,
     shouldReplaceFileContent,
     fileName: fileNameUpdated,
+    searchAndReplace,
+    configDir,
   });
 
   await createFileAndWriteContent(filePath, fileContent);
@@ -183,6 +192,8 @@ const getFileContent = async ({
   searchAndReplaceSeparator,
   shouldReplaceFileContent,
   fileName,
+  searchAndReplace,
+  configDir,
 }: Pick<
   Options,
   | CLIArg.TEMPLATE_PATH
@@ -191,17 +202,70 @@ const getFileContent = async ({
   | CLIArg.SEARCH_AND_REPLACE_SEPARATOR
   | CLIArg.SHOULD_REPLACE_FILE_CONTENT
   | CLIArg.FILE_NAME
+  | "searchAndReplace"
+  | "configDir"
 >): Promise<string> => {
   let fileContent = await readFileContent(templatePath);
 
   if (!shouldReplaceFileContent) return fileContent;
 
-  const textToBeReplacedSplitted = textToBeReplaced.split(
-    searchAndReplaceSeparator
-  );
-  const replaceTextWithSplitted = replaceTextWith.split(
-    searchAndReplaceSeparator
-  );
+  const searchAndReplaceItems = createSearchAndReplaceItemsFromArgs({
+    textToBeReplaced,
+    replaceTextWith,
+    searchAndReplaceSeparator,
+    searchAndReplace,
+  });
+
+  for (let {
+    search,
+    replace,
+    ignoreCase,
+    injectFile,
+  } of searchAndReplaceItems) {
+    Logger.debug(
+      `Replacing ${search} with ${replace} in file ${fileName}. Options: ${{
+        search,
+        replace,
+        ignoreCase,
+        injectFile,
+      }}`
+    );
+
+    let flags = "g";
+
+    if (ignoreCase) flags += "i";
+
+    if (injectFile) {
+      const injectFilePath = path.join(configDir, replace);
+
+      Logger.debug(`Reading file to inject: ${injectFilePath}`);
+
+      replace = await readFileContent(injectFilePath);
+    }
+
+    fileContent = fileContent.replace(new RegExp(search, flags), replace);
+  }
+
+  return fileContent;
+};
+
+const createSearchAndReplaceItemsFromArgs = ({
+  textToBeReplaced,
+  replaceTextWith,
+  searchAndReplaceSeparator,
+  searchAndReplace = [],
+}: Pick<
+  Options,
+  | CLIArg.TEXT_TO_BE_REPLACED
+  | CLIArg.REPLACE_TEXT_WITH
+  | CLIArg.SEARCH_AND_REPLACE_SEPARATOR
+  | "searchAndReplace"
+>): SearchAndReplaceItem[] => {
+  const textToBeReplacedSplitted =
+    textToBeReplaced?.split(searchAndReplaceSeparator) || [];
+
+  const replaceTextWithSplitted =
+    replaceTextWith?.split(searchAndReplaceSeparator) || [];
 
   if (textToBeReplacedSplitted.length !== replaceTextWithSplitted.length) {
     throw new Error(
@@ -209,20 +273,25 @@ const getFileContent = async ({
     );
   }
 
-  textToBeReplacedSplitted.forEach((currentToBeReplaced, index) => {
-    const currentReplaceTextWith = replaceTextWithSplitted[index];
+  const replaceTextWithSearchAndReplaceItems = textToBeReplacedSplitted.map(
+    (search, i) => ({
+      search,
+      replace: replaceTextWithSplitted[i],
+      order: DEFAULT_REPLACE_TEXT_WITH_ORDER,
+    })
+  );
 
-    Logger.debug(
-      `Replacing word ${currentToBeReplaced} with ${currentReplaceTextWith} in file ${fileName}`
-    );
+  searchAndReplace = searchAndReplace?.map((sr) => ({
+    ...sr,
+    order: sr.order || DEFAULT_SEARCH_AND_REPLACE_ORDER,
+  }));
 
-    fileContent = fileContent.replace(
-      new RegExp(currentToBeReplaced, "g"),
-      currentReplaceTextWith
-    );
-  });
+  const result: SearchAndReplaceItem[] = [
+    ...replaceTextWithSearchAndReplaceItems,
+    ...searchAndReplace,
+  ];
 
-  return fileContent;
+  return result.sort((a, b) => (a.order && b.order ? a.order - b.order : 0));
 };
 
 const createFilePathAndNameFromTemplate = ({

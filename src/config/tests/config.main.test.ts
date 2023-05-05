@@ -88,13 +88,4 @@ describe("getTemplateFromConfig", () => {
 
     expect(result).toEqual(TEMPLATE_CONFIG);
   });
-
-  it(`should throw an error if a template can't be found`, () => {
-    expect.assertions(1);
-    try {
-      getTemplateFromConfig(CONFIG, "unknown");
-    } catch (e: any) {
-      expect(e.message).toBe(`Couldn't find template unknown`);
-    }
-  });
 });

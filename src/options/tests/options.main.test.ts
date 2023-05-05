@@ -1,6 +1,15 @@
-import { Config, DEFAULT_CONFIG } from "./../../config/config.constants";
+import { Config, SearchAndReplaceItem } from "./../../config/config.constants";
 import { getOptions, isDebug } from "../options.main";
 import { CLIArg } from "../options.constants";
+
+const SEARCH_AND_REPLACE: SearchAndReplaceItem[] = [
+  { search: "FileName", replace: "{fileName}", ignoreCase: true },
+  { search: "FunctionComponent", replace: "FC" },
+  {
+    search: "dusan.*outlook\\.com",
+    replace: "dus4nstojanovic@gmail.com",
+  },
+];
 
 const CONFIG: Config = {
   path: "/path",
@@ -18,6 +27,7 @@ const CONFIG: Config = {
         [CLIArg.SHOULD_REPLACE_FILE_CONTENT]: true,
         [CLIArg.SHOULD_REPLACE_FILE_NAME]: true,
         [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: ";",
+        searchAndReplace: SEARCH_AND_REPLACE,
       },
     },
   ],
@@ -45,6 +55,15 @@ describe("getOptions", () => {
       [CLIArg.TEXT_TO_BE_REPLACED]: "FileName",
       [CLIArg.REPLACE_TEXT_WITH]: "value",
       [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: ";",
+      searchAndReplace: [
+        { search: "FileName", replace: "value", ignoreCase: true },
+        { search: "FunctionComponent", replace: "FC" },
+        {
+          search: "dusan.*outlook\\.com",
+          replace: "dus4nstojanovic@gmail.com",
+        },
+      ],
+      configDir: "path",
     });
   });
 });

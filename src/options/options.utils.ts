@@ -24,6 +24,7 @@ export const setArg = (arg: CLIArg, value: any, answers: Answers): Answers => {
  * @param args.answers The current answers
  * @param args.templateConfig The selected template configuration
  * @param args.defaultValue The default value to be used if none is provided
+ * @param args.shouldAsk Should ask the user if there is no value
  * @returns The updated answers
  */
 export const getInputArg = (args: {
@@ -32,11 +33,13 @@ export const getInputArg = (args: {
   answers: Answers;
   templateConfig?: TemplateConfig;
   defaultValue?: any;
+  shouldAsk?: boolean;
 }): Promise<Answers> =>
   getArg({
     ...args,
     askCallback: askInputQuestion,
     templateConfig: args?.templateConfig,
+    shouldAsk: args?.shouldAsk,
   });
 
 /**
@@ -46,6 +49,7 @@ export const getInputArg = (args: {
  * @param args.answers The current answers
  * @param args.templateConfig The selected template configuration
  * @param args.defaultValue The default value to be used if none is provided
+ * @param args.shouldAsk Should ask the user if there is no value
  * @returns The updated answers
  */
 export const getConfirmArg = (args: {
@@ -54,11 +58,13 @@ export const getConfirmArg = (args: {
   answers: Answers;
   templateConfig?: TemplateConfig;
   defaultValue?: any;
+  shouldAsk?: boolean;
 }): Promise<Answers> =>
   getArg({
     ...args,
     askCallback: askConfirmQuestion,
     templateConfig: args?.templateConfig,
+    shouldAsk: args?.shouldAsk,
   });
 
 /**
@@ -121,6 +127,7 @@ const getAnswerFromConfig = (
  * @param args.answers The current answers
  * @param args.defaultValue The default value to be used if none is provided
  * @param args.templateConfig The selected template configuration
+ * @param args.shouldAsk Should ask the user if there is no value
  * @returns The updated answers
  */
 const getArg = async ({
@@ -130,6 +137,7 @@ const getArg = async ({
   answers,
   defaultValue,
   templateConfig,
+  shouldAsk = true,
 }: {
   arg: CLIArg;
   message: string;
@@ -142,6 +150,7 @@ const getArg = async ({
   answers: Answers;
   defaultValue?: any;
   templateConfig: TemplateConfig | undefined;
+  shouldAsk?: boolean;
 }): Promise<Answers> => {
   // Arguments have the priority
   answers = getAnswerFromArgs(arg, answers);
@@ -152,7 +161,7 @@ const getArg = async ({
   }
 
   // If answer was not provided in arguments and configuration, ask for it
-  if (answers[arg] === undefined) {
+  if (answers[arg] === undefined && shouldAsk) {
     answers = await askCallback(arg, message, answers, defaultValue);
   }
 

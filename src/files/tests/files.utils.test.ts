@@ -224,6 +224,8 @@ describe("createFileOrDirectoryFromTemplate", () => {
     [CLIArg.TEXT_TO_BE_REPLACED]: "",
     [CLIArg.REPLACE_TEXT_WITH]: "",
     [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: ",",
+    searchAndReplace: [],
+    configDir: "path",
   };
 
   beforeAll(() => {

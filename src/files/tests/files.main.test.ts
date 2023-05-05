@@ -1,8 +1,18 @@
+import { SearchAndReplaceItem } from "../../config";
 import { CLIArg, Options } from "../../options";
 import { createAllDirectoriesAndFilesFromTemplate } from "../files.main";
 import * as FilesUtils from "../files.utils";
 
 describe("createAllDirectoriesAndFilesFromTemplate", () => {
+  const SEARCH_AND_REPLACE: SearchAndReplaceItem[] = [
+    { search: "FileName", replace: "{fileName}", ignoreCase: true },
+    { search: "FunctionComponent", replace: "FC" },
+    {
+      search: "dusan.*outlook\\.com",
+      replace: "dus4nstojanovic@gmail.com",
+    },
+  ];
+
   const args: Options = {
     [CLIArg.TEMPLATE_NAME]: "component",
     [CLIArg.FILE_NAME]: "test-file",
@@ -14,6 +24,8 @@ describe("createAllDirectoriesAndFilesFromTemplate", () => {
     [CLIArg.TEXT_TO_BE_REPLACED]: "",
     [CLIArg.REPLACE_TEXT_WITH]: "",
     [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: ",",
+    searchAndReplace: SEARCH_AND_REPLACE,
+    configDir: "path",
   };
   beforeAll(() => {
     jest.restoreAllMocks();
@@ -56,10 +68,12 @@ describe("createAllDirectoriesAndFilesFromTemplate", () => {
     expect(
       FilesUtils.createFileOrDirectoryFromTemplate
     ).toHaveBeenNthCalledWith(1, {
+      configDir: "path",
       dirPath: "./test-dir",
       fileName: "test-file",
       fileNameTextToBeReplaced: "",
       replaceTextWith: "",
+      searchAndReplace: SEARCH_AND_REPLACE,
       searchAndReplaceSeparator: ",",
       shouldReplaceFileContent: false,
       shouldReplaceFileName: false,
@@ -70,10 +84,12 @@ describe("createAllDirectoriesAndFilesFromTemplate", () => {
     expect(
       FilesUtils.createFileOrDirectoryFromTemplate
     ).toHaveBeenNthCalledWith(2, {
+      configDir: "path",
       dirPath: "./test-dir",
       fileName: "test-file",
       fileNameTextToBeReplaced: "",
       replaceTextWith: "",
+      searchAndReplace: SEARCH_AND_REPLACE,
       searchAndReplaceSeparator: ",",
       shouldReplaceFileContent: false,
       shouldReplaceFileName: false,

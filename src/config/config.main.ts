@@ -50,12 +50,5 @@ export const getOrCreateConfig = async (): Promise<{
 export const getTemplateFromConfig = (
   config: Config,
   templateName: string
-): TemplateConfig => {
-  const template = config.templates.find((c) => c.name === templateName);
-
-  if (!template) {
-    throw Error(`Couldn't find template ${templateName}`);
-  }
-
-  return template;
-};
+): TemplateConfig | undefined =>
+  config.templates?.find((c) => c.name === templateName);

@@ -31,8 +31,34 @@ export const findConfig = async (
     config.folder = folderPath;
     config.path = currentPath;
 
+    validateConfig(config);
+
     return config;
   } catch (error) {
     return await findConfig(path.join(pathArg, ".."), currentPath);
+  }
+};
+
+export const validateConfig = (config: Config) => {
+  let errorMessage = `Invalid ${CONFIG_FILE_NAME}: `;
+
+  for (const template of config.templates) {
+    if (!template.name) {
+      throw new Error(`${errorMessage} Template name is required`);
+    }
+
+    template?.options?.searchAndReplace?.forEach((searchAndReplace) => {
+      if (!searchAndReplace.search) {
+        throw new Error(
+          `${errorMessage} searchAndReplace 'search' is required`
+        );
+      }
+
+      if (!searchAndReplace.replace) {
+        throw new Error(
+          `${errorMessage} searchAndReplace 'replace' is required`
+        );
+      }
+    });
   }
 };

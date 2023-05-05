@@ -9,7 +9,7 @@ You can use this CLI for any language or framework (JavaScript, Node, React, Ang
 ## Features
 
 - Create a custom file structure using a terminal
-- **Search and replace** - Replace file content with a custom text or file name
+- **Search and replace** - Replace file content with a custom text or file name (text, regex, inject files, ...)
 - Create **multiple templates**
 - Set options directly as a CLI argument, or answering on CLI questions, or:
 - Set **defaults** by configuring a CLI using a .**config JSON file** for each template - _cfft.config.json_
@@ -42,11 +42,12 @@ You should see the message that _cfft.config.json_ is created with a default val
         "templatePath": "/.cfft.templates/component",
         "dirPath": "./{fileName}",
         "fileNameTextToBeReplaced": "component",
-        "textToBeReplaced": "FileName",
-        "replaceTextWith": "{fileName}",
-        "shouldReplaceFileContent": true,
-        "shouldReplaceFileName": true,
-        "searchAndReplaceSeparator": ";"
+        "searchAndReplace": [
+          {
+            "search": "FileName",
+            "replace": "{fileName}"
+          }
+        ]
       }
     }
   ]
@@ -79,7 +80,7 @@ You can edit these values however you want. See the _Options_ section where it i
 │   │   ├── index.ts
 ```
 
-> Note: If you are using **GIT**, you can ignore cfft.config.json and your templates if you wish to.
+> Note: If you use **GIT**, you can ignore cfft.config.json and your templates if you wish to.
 
 5. Insert some content into your newly created files `component.tsx`, `component.styles.ts` and `index.ts`:
 
@@ -115,7 +116,7 @@ _index.ts_
 export { default } from "./FileName";
 ```
 
-Doing so, The CFFT CLI is ready for use. Let's test it.
+Doing so, the CFFT CLI is ready for use. Let's test it.
 
 6. Create a src folder manually:
 
@@ -192,13 +193,7 @@ _If you were following the previous example, remove the MyFile folder._
 1. Remove all options from your **cfft.config.json** file:
 
 ```json
-{
-  "templates": [
-    {
-      "name": "component"
-    }
-  ]
-}
+{}
 ```
 
 2. Execute the **cfft** command:
@@ -244,8 +239,7 @@ _If you were following one of the previous examples, remove the MyFile folder._
         "dirPath": "./{fileName}",
         "fileNameTextToBeReplaced": "component",
         "shouldReplaceFileContent": true,
-        "shouldReplaceFileName": true,
-        "searchAndReplaceSeparator": ";"
+        "shouldReplaceFileName": true
       }
     }
   ]
@@ -262,15 +256,13 @@ cfft --fileName MyFile --textToBeReplaced FileName --replaceTextWith Test
 
 ## Search and replace - replace multiple placeholders
 
-CFFT CLI allows you to search and replace multiple placeholders. To work with this feature, enter the list of placeholders and replacement values separated by the `searchAndReplaceSeparator` character to both `textToBeReplaced` and `replaceTextWith`.
-
-> Note: It is important that textToBeReplaced and replaceTextWith have the same number of segments.
+CFFT CLI allows you to search and replace multiple placeholders. This is possible by adding the additional items in the `searchAndReplace` array.
 
 ### Example
 
 _If you were following one of the previous examples, remove the MyFile folder._
 
-1. Update the `textToBeReplaced` and `replaceTextWith` in the **cfft.config.json**:
+1. Update the `searchAndReplace` in the **cfft.config.json**:
 
 ```json
 {
@@ -282,16 +274,44 @@ _If you were following one of the previous examples, remove the MyFile folder._
         "templatePath": "/.cfft.templates/component",
         "dirPath": "./{fileName}",
         "fileNameTextToBeReplaced": "component",
-        "textToBeReplaced": "FileName;FC",
-        "replaceTextWith": "{fileName};FunctionComponent",
-        "shouldReplaceFileContent": true,
-        "shouldReplaceFileName": true,
-        "searchAndReplaceSeparator": ";"
+        "searchAndReplace": [
+          {
+            "search": "FileName",
+            "replace": "{fileName}"
+          },
+          {
+            "search": "FC",
+            "replace": "FunctionComponent"
+          }
+        ]
       }
     }
   ]
 }
 ```
+
+- An alternative is to enter the list of placeholders and replacement values separated by the `searchAndReplaceSeparator` character to both `textToBeReplaced` and `replaceTextWith`:
+
+```json
+{
+  "defaultTemplateName": "component",
+  "templates": [
+    {
+      "name": "component",
+      "options": {
+        "templatePath": "/.cfft.templates/component",
+        "dirPath": "./{fileName}",
+        "fileNameTextToBeReplaced": "component",
+        "searchAndReplaceSeparator": ";",
+        "textToBeReplaced": "FileName;FC",
+        "replaceTextWith": "{fileName};FunctionComponent"
+      }
+    }
+  ]
+}
+```
+
+> Note: It is important that textToBeReplaced and replaceTextWith have the same number of segments.
 
 2. Execute the **cfft** command:
 
@@ -360,11 +380,16 @@ _main.scss_
         "templatePath": "/.cfft.templates/component",
         "dirPath": "./{fileName}",
         "fileNameTextToBeReplaced": "component",
-        "textToBeReplaced": "FileName;FC",
-        "replaceTextWith": "{fileName};FunctionComponent",
-        "shouldReplaceFileContent": true,
-        "shouldReplaceFileName": true,
-        "searchAndReplaceSeparator": ";"
+        "searchAndReplace": [
+          {
+            "search": "FileName",
+            "replace": "{fileName}"
+          },
+          {
+            "search": "FC",
+            "replace": "FunctionComponent"
+          }
+        ]
       }
     },
     {
@@ -396,30 +421,274 @@ cfft --template css --fileName my-styles
 
 The **main.scss**, will be exactly the same, since we were not replacing the file content.
 
+## Injecting a file content
+
+Besides replacing the placeholders with text, it is possible to do the replacement with the file content. To inject the file content, set the `injectFile` to **true**.
+
+### Example
+
+_If you were following one of the previous examples, remove the MyFile folder._
+
+1. Add the **table.html** file to **.cfft.templates** directory:
+
+_table.html_
+
+```html
+<table>
+  <thead>
+    <tr>
+      <th>Head 1</th>
+      <th>Head 2</th>
+      <th>Head 3</th>
+      <th>Head 4</th>
+      <th>Head 5</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Cell 1.1</td>
+    <td>Cell 1.2</td>
+    <td>Cell 1.3</td>
+    <td>Cell 1.4</td>
+    <td>Cell 1.5</td>
+  </tr>
+  <tr>
+    <td>Cell 2.1</td>
+    <td>Cell 2.2</td>
+    <td>Cell 2.3</td>
+    <td>Cell 2.4</td>
+    <td>Cell 2.5</td>
+  </tr>
+</table>
+```
+
+2. Update the template file:
+
+_component.tsx_
+
+```js
+import { FC } from "react";
+import { style } from "./FileName.styles";
+
+const FileName: FC = () => {
+  return (
+    <div style={style}>
+      <p>TODO: FileName</p>
+
+      {table}
+    </div>
+  );
+};
+
+export default FileName;
+```
+
+3. Update the **cfft.config.json**:
+
+```json
+{
+  "defaultTemplateName": "component",
+  "templates": [
+    {
+      "name": "component",
+      "options": {
+        "templatePath": "/.cfft.templates/component",
+        "dirPath": "./{fileName}",
+        "fileNameTextToBeReplaced": "component",
+        "searchAndReplace": [
+          {
+            "search": "{table}",
+            "replace": "/.cfft.templates/table.html",
+            "injectFile": true
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+4. Execute the **cfft** command:
+
+```sh
+cfft --fileName MyFile
+```
+
+5. The CLI will create files and inject the table in the _MyFile.tsx_ file:
+
+```js
+import { FC } from "react";
+import { style } from "./FileName.styles";
+
+const FileName: FC = () => {
+  return (
+    <div style={style}>
+      <p>TODO: FileName</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Head 1</th>
+            <th>Head 2</th>
+            <th>Head 3</th>
+            <th>Head 4</th>
+            <th>Head 5</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>Cell 1.1</td>
+          <td>Cell 1.2</td>
+          <td>Cell 1.3</td>
+          <td>Cell 1.4</td>
+          <td>Cell 1.5</td>
+        </tr>
+        <tr>
+          <td>Cell 2.1</td>
+          <td>Cell 2.2</td>
+          <td>Cell 2.3</td>
+          <td>Cell 2.4</td>
+          <td>Cell 2.5</td>
+        </tr>
+      </table>
+    </div>
+  );
+};
+
+export default FileName;
+```
+
+## The order of the search and replace execution
+
+In some cases, the replacement order may metter. For example, you may want to inject file content and after that to replace parts of it.
+
+### Default orders
+
+| **Method**                             | **Order** |
+| :------------------------------------- | :-------: |
+| _textToBeReplaced_ & _replaceTextWith_ |     0     |
+| searchAndReplace                       |     1     |
+
+### Example
+
+_If you were following one of the previous examples, remove the MyFile folder._
+
+1. Update the **cfft.config.json** file:
+
+```json
+{
+  "name": "component",
+  "options": {
+    "templatePath": "/.cfft.templates/component",
+    "dirPath": "./{fileName}",
+    "fileNameTextToBeReplaced": "component",
+    "searchAndReplace": [
+      {
+        "search": "{table}",
+        "replace": "/.cfft.templates/table.html",
+        "injectFile": true,
+        "order": -2
+      },
+      { "search": "Cell 1.5", "replace": "HELLO!", "order": -1 }
+    ]
+  }
+}
+```
+
+2. Execute the **cfft** command:
+
+```sh
+cfft --fileName MyFile
+```
+
+3. The CLI will create files and inject the table in the _MyFile.tsx_ file:
+
+```js
+import { FC } from "react";
+import { style } from "./FileName.styles";
+
+const FileName: FC = () => {
+  return (
+    <div style={style}>
+      <p>TODO: FileName</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Head 1</th>
+            <th>Head 2</th>
+            <th>Head 3</th>
+            <th>Head 4</th>
+            <th>Head 5</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>Cell 1.1</td>
+          <td>Cell 1.2</td>
+          <td>Cell 1.3</td>
+          <td>Cell 1.4</td>
+          <td>HELLO!</td>
+        </tr>
+        <tr>
+          <td>Cell 2.1</td>
+          <td>Cell 2.2</td>
+          <td>Cell 2.3</td>
+          <td>Cell 2.4</td>
+          <td>Cell 2.5</td>
+        </tr>
+      </table>
+    </div>
+  );
+};
+
+export default FileName;
+```
+
+## Ignoring the case of the letters on text searching
+
+By default, searching by text is case-sensitive. You can change this behavior by using the `ignoreCase` option. For example:
+
+```json
+...
+"searchAndReplace": [
+  { "search": "FileName", "replace": "{fileName}", "ignoreCase": true }
+]
+...
+```
+
 ## Options
 
-| **Description**                                                                  | **Command**               | **Alias** | **Default**                | **CLI** | **cfft.config** |
-| :------------------------------------------------------------------------------- | :------------------------ | :-------: | :------------------------- | :-----: | :-------------: |
-| **File name to be used**                                                         | fileName                  |    -n     |                            |    ✓    |       ❌        |
-| **Path to the location where to generate files**                                 | dirPath                   |           | ./{fileName}               |    ✓    |        ✓        |
-| **Name of the template to use**                                                  | template                  |    -t     |                            |    ✓    |       ❌        |
-| **Path to the specific template folder**                                         | templatePath              |           | /.cfft.templates/component |    ✓    |        ✓        |
-| **Default template name to be used every time when --template is not specified** | defaultTemplateName       |           | component                  |   ❌    |        ✓        |
-| **Should or not CLI replace a file name**                                        | shouldReplaceFileName     |           | true                       |    ✓    |        ✓        |
-| **Wich part of the file name should be replaced**                                | fileNameTextToBeReplaced  |           | component                  |    ✓    |        ✓        |
-| **Should or not CLI replace a file content**                                     | shouldReplaceFileContent  |           | true                       |    ✓    |        ✓        |
-| **Text to be replaced separated by a search and replace separator**              | textToBeReplaced          |           | FileName                   |    ✓    |        ✓        |
-| **Text to be used for search and replace separated by a separator**              | replaceTextWith           |           | {fileName}                 |    ✓    |        ✓        |
-| **Custom separator for search and replace**                                      | searchAndReplaceSeparator |           | ;                          |    ✓    |        ✓        |
-| **Show additional logs**                                                         | debug                     |           |                            |    ✓    |       ❌        |
-| **See the package version**                                                      | --version                 |    -v     |                            |    ✓    |       ❌        |
-| **Get help**                                                                     | --help                    |           |                            |    ✓    |       ❌        |
+| **Description**                                                               | **Command**                   | **Alias** | **Default**                | **CLI** | **cfft.config** |
+| :---------------------------------------------------------------------------- | :---------------------------- | :-------: | :------------------------- | :-----: | :-------------: |
+| File name to be used                                                          | **fileName**                  |    -n     |                            |    ✓    |       ❌        |
+| Path to the location where to generate files                                  | **dirPath**                   |           | ./{fileName}               |    ✓    |        ✓        |
+| Name of the template to use                                                   | **template**                  |    -t     |                            |    ✓    |       ❌        |
+| Path to the specific template folder                                          | **templatePath**              |           | /.cfft.templates/component |    ✓    |        ✓        |
+| Default template name to be used every time when --template is not specified  | **defaultTemplateName**       |           | component                  |   ❌    |        ✓        |
+| Should or not CLI replace a file name                                         | **shouldReplaceFileName**     |           | true                       |    ✓    |        ✓        |
+| Wich part of the file name should be replaced                                 | **fileNameTextToBeReplaced**  |           | component                  |    ✓    |        ✓        |
+| Should or not CLI replace a file content                                      | **shouldReplaceFileContent**  |           | true                       |    ✓    |        ✓        |
+| Text (or regex) to be replaced separated by a search and replace separator    | **textToBeReplaced**          |           | FileName                   |    ✓    |        ✓        |
+| Text to be used for replacement separated by a separator                      | **replaceTextWith**           |           | {fileName}                 |    ✓    |        ✓        |
+| Custom separator for search and replace                                       | **searchAndReplaceSeparator** |           | ;                          |    ✓    |        ✓        |
+| Add additional search and replace items throug config (with extended options) | **searchAndReplace**          |           |                            |   ❌    |        ✓        |
+| Show additional logs                                                          | **--debug**                   |           |                            |    ✓    |       ❌        |
+| See the package version                                                       | **--version**                 |    -v     |                            |    ✓    |       ❌        |
+| Get help                                                                      | **--help**                    |           |                            |    ✓    |       ❌        |
 
 > Note: When specifing an option in a terminal, always add _--_ as prefix. Example:
 
 ```sh
 cfft --template MyTemplate
 ```
+
+### Search and replace options
+
+| **Description**                                                              | **Field**      | **required** | **default** |
+| :--------------------------------------------------------------------------- | :------------- | :----------: | :---------: |
+| Text (or regex) to be replaced                                               | **search**     |      ✓       |             |
+| Text to be used for replacement - or path to the file when _injectFile=true_ | **replace**    |      ✓       |             |
+| Should ignore the letters case                                               | **ignoreCase** |              |    false    |
+| Should inject a file content at the found placeholder                        | **injectFile** |              |    false    |
+| In which order to do the search and replace (lower order has precedence)     | **order**      |              |      1      |
 
 ### Placeholders
 

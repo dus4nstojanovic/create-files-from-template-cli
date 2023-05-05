@@ -43,7 +43,31 @@ export const getOptions = async (config: Config): Promise<Options> => {
 
   answers = getSearchAndReplaceCharater({ templateConfig, answers });
 
+  answers = getSearchAndReplaceItems({ templateConfig, answers });
+
+  answers.configDir = config.folder;
+
   return answers as Options;
+};
+
+const getSearchAndReplaceItems = ({
+  templateConfig,
+  answers,
+}: {
+  templateConfig: TemplateConfig | undefined;
+  answers: Answers;
+}) => {
+  answers.searchAndReplace = templateConfig?.options?.searchAndReplace?.map(
+    (sr) => ({
+      ...sr,
+      replace: sr.replace?.replace(
+        new RegExp("{fileName}", "g"),
+        answers[CLIArg.FILE_NAME]
+      ),
+    })
+  );
+
+  return answers;
 };
 
 const getTemplateName = async ({
@@ -80,7 +104,7 @@ const getDirPath = async ({
   templateConfig,
   answers,
 }: {
-  templateConfig: TemplateConfig;
+  templateConfig: TemplateConfig | undefined;
   answers: Answers;
 }): Promise<Answers> => {
   answers = await getInputArg({
@@ -100,7 +124,7 @@ const getTemplatePath = async ({
   answers,
 }: {
   config: Config;
-  templateConfig: TemplateConfig;
+  templateConfig: TemplateConfig | undefined;
   answers: Answers;
 }): Promise<Answers> => {
   answers = await getInputArg({
@@ -124,16 +148,16 @@ const getFileNameTextReplacement = async ({
   templateConfig,
   answers,
 }: {
-  templateConfig: TemplateConfig;
+  templateConfig: TemplateConfig | undefined;
   answers: Answers;
 }): Promise<Answers> => {
   const hasFileNameTextToBeReplaced =
     hasArg(CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED) ||
-    templateConfig.options?.[CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED];
+    templateConfig?.options?.[CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED];
 
   const shouldAskForReplaceFileName =
     extractArg(CLIArg.SHOULD_REPLACE_FILE_NAME) !== false &&
-    templateConfig.options?.[CLIArg.SHOULD_REPLACE_FILE_NAME] !== false;
+    templateConfig?.options?.[CLIArg.SHOULD_REPLACE_FILE_NAME] !== false;
 
   if (!hasFileNameTextToBeReplaced && shouldAskForReplaceFileName) {
     answers = await getConfirmArg({
@@ -166,21 +190,26 @@ const getFileContentTextReplacement = async ({
   templateConfig,
   answers,
 }: {
-  templateConfig: TemplateConfig;
+  templateConfig: TemplateConfig | undefined;
   answers: Answers;
 }): Promise<Answers> => {
+  const hasSearchAndReplaceItems =
+    !!templateConfig?.options?.searchAndReplace?.length;
+
   const hasTextToBeReplaced =
     hasArg(CLIArg.TEXT_TO_BE_REPLACED) ||
-    !!templateConfig.options?.[CLIArg.TEXT_TO_BE_REPLACED];
+    !!templateConfig?.options?.[CLIArg.TEXT_TO_BE_REPLACED] ||
+    hasSearchAndReplaceItems;
 
   const shouldAskForReplaceFileContent =
-    templateConfig.options?.[CLIArg.SHOULD_REPLACE_FILE_CONTENT] !== false &&
-    extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) !== false;
+    templateConfig?.options?.[CLIArg.SHOULD_REPLACE_FILE_CONTENT] !== false &&
+    extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) !== false &&
+    !hasSearchAndReplaceItems;
 
   const shouldNotAskForReplaceTextWith =
     extractArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT) === true &&
     (!hasArg(CLIArg.REPLACE_TEXT_WITH) ||
-      !templateConfig.options?.[CLIArg.REPLACE_TEXT_WITH]);
+      !templateConfig?.options?.[CLIArg.REPLACE_TEXT_WITH]);
 
   if (!hasTextToBeReplaced && shouldAskForReplaceFileContent) {
     answers = await getConfirmArg({
@@ -203,6 +232,7 @@ const getFileContentTextReplacement = async ({
       message: "Enter text to be replaced:",
       answers,
       templateConfig,
+      shouldAsk: !hasSearchAndReplaceItems,
     });
 
     if (!shouldNotAskForReplaceTextWith) {
@@ -212,6 +242,7 @@ const getFileContentTextReplacement = async ({
         answers,
         defaultValue: answers[CLIArg.FILE_NAME],
         templateConfig,
+        shouldAsk: !hasSearchAndReplaceItems,
       });
     } else {
       answers = setArg(
@@ -229,12 +260,12 @@ const getSearchAndReplaceCharater = ({
   templateConfig,
   answers,
 }: {
-  templateConfig: TemplateConfig;
+  templateConfig: TemplateConfig | undefined;
   answers: Answers;
 }): Answers => {
   answers[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] =
     (extractArg(CLIArg.SEARCH_AND_REPLACE_SEPARATOR) as string) ||
-    templateConfig.options?.[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] ||
+    templateConfig?.options?.[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] ||
     ";";
 
   return answers;
