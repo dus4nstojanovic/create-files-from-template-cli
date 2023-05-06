@@ -566,6 +566,7 @@ In some cases, the replacement order may matter. For example, you may want to in
 | :------------------------------------- | :-------: |
 | _textToBeReplaced_ & _replaceTextWith_ |     0     |
 | searchAndReplace                       |     1     |
+| Special                                |   last    |
 
 ### Example
 
@@ -652,9 +653,9 @@ By default, searching by text is case-sensitive. You can change this behavior by
 ]
 ```
 
-## Using the special replacement tags
+## Using the special replacement placeholders
 
-Special replacement tags (for example: _{env:ENV_VARIABLE_NAME}_ or _{dateTimeNow:DNS_FORMAT}_) are replaced as the last replacement task. See the **Special replacement values** table for more info. This allows you to add specific or dynamic values during file creation.
+The special replacement placeholders (for example: _{env:ENV_VARIABLE_NAME}_ or _{dateTimeNow:DNS_FORMAT}_) are replaced as the last replacement task. See the **Special replacement placeholders** table for more info. This allows you to add specific or dynamic values during the file creation.
 
 ### Example
 
@@ -741,12 +742,12 @@ cfft --template MyTemplate
 | Should inject a file content at the found placeholder                        | **injectFile** |              |    false    |
 | In which order to do the search and replace (lower order has precedence)     | **order**      |              |      1      |
 
-## Special replacement values
+## Special replacement placeholders
 
-| **Tag**                  | **Description**                                                                                                                             |
-| :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
-| {env:ENV_VARIABLE_NAME}  | Replaces the tag with the specified environment variable                                                                                    |
-| {dateTimeNow:DNS_FORMAT} | Replaces the tag with the current date and time using the date-fns format. See: [date-fns format](https://date-fns.org/v2.29.3/docs/format) |
+| **Tag**                  | **Description**                                                                                                                                         |
+| :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| {env:ENV_VARIABLE_NAME}  | Replaces the placeholder with the specified environment variable                                                                                        |
+| {dateTimeNow:DNS_FORMAT} | Replaces the placeholder with the current date and time using the **date-fns** format. See: [date-fns format](https://date-fns.org/v2.29.3/docs/format) |
 
 ### Placeholders
 
