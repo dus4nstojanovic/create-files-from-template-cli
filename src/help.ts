@@ -1,5 +1,6 @@
 import Table from "cli-table";
 import { CLIArg, CLIArgAlias } from "./options";
+import Logger from "./logger";
 
 export const writeHelpTable = () => {
   const table = new Table({
@@ -69,5 +70,5 @@ export const writeHelpTable = () => {
 
   table.push(...rows);
 
-  console.log(table.toString());
+  Logger.log(table.toString());
 };

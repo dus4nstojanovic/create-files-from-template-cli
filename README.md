@@ -558,7 +558,7 @@ export default FileName;
 
 ## The order of the search and replace execution
 
-In some cases, the replacement order may metter. For example, you may want to inject file content and after that to replace parts of it.
+In some cases, the replacement order may matter. For example, you may want to inject file content and after that to replace parts of it.
 
 ### Default orders
 
@@ -647,11 +647,62 @@ export default FileName;
 By default, searching by text is case-sensitive. You can change this behavior by using the `ignoreCase` option. For example:
 
 ```json
-...
 "searchAndReplace": [
   { "search": "FileName", "replace": "{fileName}", "ignoreCase": true }
 ]
-...
+```
+
+## Using the special replacement tags
+
+Special replacement tags (for example: _{env:ENV_VARIABLE_NAME}_ or _{dateTimeNow:DNS_FORMAT}_) are replaced as the last replacement task. See the **Special replacement values** table for more info. This allows you to add specific or dynamic values during file creation.
+
+### Example
+
+_If you were following one of the previous examples, remove the MyFile folder._
+
+1. Add environment variables or use the existing ones. In this example, we are going to use _TEST_ENV=myEnv_ and _ANOTHER_ENV=anotherEnv_.
+2. Update your template by adding the following tags:
+
+_component.tsx_
+
+```js
+import { FC } from "react";
+import { style } from "./FileName.styles";
+
+const FileName: FC = () => {
+  return (
+    <div style={style}>
+      <p>My env variable: {env:TEST_ENV} and {env:ANOTHER_ENV}</p>
+      <p>{dateTimeNow:yyyy-MM-dd}</p>
+    </div>
+  );
+};
+
+export default FileName;
+```
+
+3. Execute the **cfft** command:
+
+```sh
+cfft --fileName MyFile
+```
+
+4. The CLI will create files and replace the special tags with the values in the _MyFile.tsx_ file:
+
+```js
+import { FC } from "react";
+import { style } from "./MyFile.styles";
+
+const MyFile: FC = () => {
+  return (
+    <div style={style}>
+      <p>My env variable: myEnv and anotherEnv</p>
+      <p>2023-05-06</p>
+    </div>
+  );
+};
+
+export default MyFile;
 ```
 
 ## Options
@@ -689,6 +740,13 @@ cfft --template MyTemplate
 | Should ignore the letters case                                               | **ignoreCase** |              |    false    |
 | Should inject a file content at the found placeholder                        | **injectFile** |              |    false    |
 | In which order to do the search and replace (lower order has precedence)     | **order**      |              |      1      |
+
+## Special replacement values
+
+| **Tag**                  | **Description**                                                                                                                             |
+| :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| {env:ENV_VARIABLE_NAME}  | Replaces the tag with the specified environment variable                                                                                    |
+| {dateTimeNow:DNS_FORMAT} | Replaces the tag with the current date and time using the date-fns format. See: [date-fns format](https://date-fns.org/v2.29.3/docs/format) |
 
 ### Placeholders
 

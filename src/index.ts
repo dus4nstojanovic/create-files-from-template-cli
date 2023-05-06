@@ -9,7 +9,7 @@ import { writeHelpTable } from "./help";
 const run = async () => {
   try {
     if (extractArg(CLIArg.VERSION)) {
-      console.log(require("./package.json").version);
+      Logger.log(require("./package.json").version);
       return;
     }
 

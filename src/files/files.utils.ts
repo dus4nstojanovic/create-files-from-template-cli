@@ -8,6 +8,7 @@ import {
   DEFAULT_REPLACE_TEXT_WITH_ORDER,
   DEFAULT_SEARCH_AND_REPLACE_ORDER,
 } from "../constants";
+import { format } from "date-fns";
 
 /**
  * Adjusts the provided path
@@ -216,35 +217,16 @@ const getFileContent = async ({
     searchAndReplace,
   });
 
-  for (let {
-    search,
-    replace,
-    ignoreCase,
-    injectFile,
-  } of searchAndReplaceItems) {
-    Logger.debug(
-      `Replacing ${search} with ${replace} in file ${fileName}. Options: ${{
-        search,
-        replace,
-        ignoreCase,
-        injectFile,
-      }}`
-    );
+  fileContent = await replaceSearchItems({
+    searchAndReplaceItems,
+    fileName,
+    configDir,
+    fileContent,
+  });
 
-    let flags = "g";
+  fileContent = replaceEnvVariables(fileContent);
 
-    if (ignoreCase) flags += "i";
-
-    if (injectFile) {
-      const injectFilePath = path.join(configDir, replace);
-
-      Logger.debug(`Reading file to inject: ${injectFilePath}`);
-
-      replace = await readFileContent(injectFilePath);
-    }
-
-    fileContent = fileContent.replace(new RegExp(search, flags), replace);
-  }
+  fileContent = replaceDateTime(fileContent);
 
   return fileContent;
 };
@@ -294,6 +276,50 @@ const createSearchAndReplaceItemsFromArgs = ({
   return result.sort((a, b) => (a.order && b.order ? a.order - b.order : 0));
 };
 
+const replaceSearchItems = async ({
+  searchAndReplaceItems,
+  fileName,
+  configDir,
+  fileContent,
+}: {
+  searchAndReplaceItems: SearchAndReplaceItem[];
+  fileName: string;
+  configDir: string;
+  fileContent: string;
+}) => {
+  for (let {
+    search,
+    replace,
+    ignoreCase,
+    injectFile,
+  } of searchAndReplaceItems) {
+    Logger.debug(
+      `Replacing ${search} with ${replace} in file ${fileName}. Options: ${{
+        search,
+        replace,
+        ignoreCase,
+        injectFile,
+      }}`
+    );
+
+    let flags = "g";
+
+    if (ignoreCase) flags += "i";
+
+    if (injectFile) {
+      const injectFilePath = path.join(configDir, replace);
+
+      Logger.debug(`Reading file to inject: ${injectFilePath}`);
+
+      replace = await readFileContent(injectFilePath);
+    }
+
+    fileContent = fileContent.replace(new RegExp(search, flags), replace);
+  }
+
+  return fileContent;
+};
+
 const createFilePathAndNameFromTemplate = ({
   templatePath,
   shouldReplaceFileName,
@@ -318,4 +344,41 @@ const createFilePathAndNameFromTemplate = ({
     : templateFileName;
 
   return { filePath: path.join(dirPath, fileNameUpdated), fileNameUpdated };
+};
+
+const replaceEnvVariables = (text: string): string => {
+  const pattern = /\{env:([^\}]+)\}/g;
+
+  return text.replace(pattern, (match, envVarName) => {
+    const envVarValue = process.env[envVarName];
+    const valueFound = envVarValue !== undefined;
+
+    if (valueFound) {
+      Logger.debug(
+        `Replacing environment variable tag ${match} with environment variable ${envVarName} with value: ${envVarValue}`
+      );
+
+      return envVarValue;
+    } else {
+      Logger.warning(`Environment variable ${envVarName} not found!`);
+
+      return match;
+    }
+  });
+};
+
+const replaceDateTime = (text: string): string => {
+  const pattern = /\{dateTimeNow:([^\}]+)\}/g;
+
+  const dateNow = new Date();
+
+  return text.replace(pattern, (match, dateTimeNowFormat) => {
+    const result = format(dateNow, dateTimeNowFormat);
+
+    Logger.debug(
+      `Replacing dateTimeNow tag ${match} with the current date and time using the format ${dateTimeNowFormat} with value: ${result}`
+    );
+
+    return result;
+  });
 };
