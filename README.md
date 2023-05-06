@@ -18,6 +18,21 @@ You can use this CLI for any language or framework (JavaScript, Node, React, Ang
 
 See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli/releases/) to see what is changed in the latest version.
 
+## Table of contents
+
+- [Getting started (Tutorial)](#getting-started-tutorial)
+- [Filling the missing configuration options](#filling-the-missing-configuration-options)
+- [Filling the missing configuration options using the CLI arguments](#filling-the-missing-configuration-options-using-the-cli-arguments)
+- [Search and replace - replace multiple placeholders](#search-and-replace---replace-multiple-placeholders)
+- [Inject a file content](#injecting-a-file-content)
+- [The order of the search and replace execution](#the-order-of-the-search-and-replace-execution)
+- [Ignoring the case of the letters on text searching](#ignoring-the-case-of-the-letters-on-text-searching)
+- [Using the special replacement placeholders](#using-the-special-replacement-placeholders)
+- [Options](#options)
+- [Search and replace options](#search-and-replace-options)
+- [Special replacement placeholders](#special-replacement-placeholders)
+- [Placeholders](#placeholders)
+
 ## Getting started (Tutorial)
 
 1. **Install** the package globally:
