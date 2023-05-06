@@ -14,6 +14,10 @@ You can use this CLI for any language or framework (JavaScript, Node, React, Ang
 - Set options directly as a CLI argument, or answering on CLI questions, or:
 - Set **defaults** by configuring a CLI using a .**config JSON file** for each template - _cfft.config.json_
 
+## Releases
+
+See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli/releases/) to see what is changed in the latest version.
+
 ## Getting started (Tutorial)
 
 1. **Install** the package globally:
@@ -566,7 +570,7 @@ In some cases, the replacement order may matter. For example, you may want to in
 | :------------------------------------- | :-------: |
 | _textToBeReplaced_ & _replaceTextWith_ |     0     |
 | searchAndReplace                       |     1     |
-| Special                                |   last    |
+| Special replacement placeholders       |   last    |
 
 ### Example
 
