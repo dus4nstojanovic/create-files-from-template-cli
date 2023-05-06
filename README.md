@@ -763,10 +763,10 @@ cfft --template MyTemplate
 
 ## Special replacement placeholders
 
-| **Tag**                  | **Description**                                                                                                                                         |
-| :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| {env:ENV_VARIABLE_NAME}  | Replaces the placeholder with the specified environment variable                                                                                        |
-| {dateTimeNow:DNS_FORMAT} | Replaces the placeholder with the current date and time using the **date-fns** format. See: [date-fns format](https://date-fns.org/v2.29.3/docs/format) |
+| **Tag**                       | **Description**                                                                                                                                         |
+| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| {env:ENV_VARIABLE_NAME}       | Replaces the placeholder with the specified environment variable                                                                                        |
+| {dateTimeNow:DATE_FNS_FORMAT} | Replaces the placeholder with the current date and time using the **date-fns** format. See: [date-fns format](https://date-fns.org/v2.29.3/docs/format) |
 
 ### Placeholders
 
