@@ -3,12 +3,13 @@ import path from "path";
 import { promisify } from "util";
 import Logger from "../logger";
 import { CLIArg, Options } from "../options";
-import { SearchAndReplaceItem } from "../config";
 import {
-  DEFAULT_REPLACE_TEXT_WITH_ORDER,
-  DEFAULT_SEARCH_AND_REPLACE_ORDER,
-} from "../constants";
-import { format } from "date-fns";
+  replaceSearchItems,
+  replaceEnvVariables,
+  replaceDateTime,
+  createSearchAndReplaceItemsFromArgs,
+} from "./files.search-and-replace";
+import { onFileCreatedHook } from "./files.hooks";
 
 /**
  * Adjusts the provided path
@@ -159,6 +160,7 @@ const createFileFromTemplate = async ({
   searchAndReplaceSeparator,
   searchAndReplace,
   configDir,
+  hooksPath,
 }: Options): Promise<void> => {
   const { filePath, fileNameUpdated } = createFilePathAndNameFromTemplate({
     templatePath,
@@ -170,7 +172,7 @@ const createFileFromTemplate = async ({
 
   Logger.debug("Reading file:", templatePath);
 
-  const fileContent = await getFileContent({
+  const fileContent = await getFileContentAndSearchAndReplace({
     templatePath,
     textToBeReplaced,
     replaceTextWith,
@@ -183,10 +185,12 @@ const createFileFromTemplate = async ({
 
   await createFileAndWriteContent(filePath, fileContent);
 
+  onFileCreatedHook({ configDir, hooksPath, filePath, templatePath });
+
   Logger.info(`${filePath} created!`);
 };
 
-const getFileContent = async ({
+const getFileContentAndSearchAndReplace = async ({
   templatePath,
   textToBeReplaced,
   replaceTextWith,
@@ -231,95 +235,6 @@ const getFileContent = async ({
   return fileContent;
 };
 
-const createSearchAndReplaceItemsFromArgs = ({
-  textToBeReplaced,
-  replaceTextWith,
-  searchAndReplaceSeparator,
-  searchAndReplace = [],
-}: Pick<
-  Options,
-  | CLIArg.TEXT_TO_BE_REPLACED
-  | CLIArg.REPLACE_TEXT_WITH
-  | CLIArg.SEARCH_AND_REPLACE_SEPARATOR
-  | "searchAndReplace"
->): SearchAndReplaceItem[] => {
-  const textToBeReplacedSplitted =
-    textToBeReplaced?.split(searchAndReplaceSeparator) || [];
-
-  const replaceTextWithSplitted =
-    replaceTextWith?.split(searchAndReplaceSeparator) || [];
-
-  if (textToBeReplacedSplitted.length !== replaceTextWithSplitted.length) {
-    throw new Error(
-      "textToBeReplaced and replaceTextWith arguments length mismatch!"
-    );
-  }
-
-  const replaceTextWithSearchAndReplaceItems = textToBeReplacedSplitted.map(
-    (search, i) => ({
-      search,
-      replace: replaceTextWithSplitted[i],
-      order: DEFAULT_REPLACE_TEXT_WITH_ORDER,
-    })
-  );
-
-  searchAndReplace = searchAndReplace?.map((sr) => ({
-    ...sr,
-    order: sr.order || DEFAULT_SEARCH_AND_REPLACE_ORDER,
-  }));
-
-  const result: SearchAndReplaceItem[] = [
-    ...replaceTextWithSearchAndReplaceItems,
-    ...searchAndReplace,
-  ];
-
-  return result.sort((a, b) => (a.order && b.order ? a.order - b.order : 0));
-};
-
-const replaceSearchItems = async ({
-  searchAndReplaceItems,
-  fileName,
-  configDir,
-  fileContent,
-}: {
-  searchAndReplaceItems: SearchAndReplaceItem[];
-  fileName: string;
-  configDir: string;
-  fileContent: string;
-}) => {
-  for (let {
-    search,
-    replace,
-    ignoreCase,
-    injectFile,
-  } of searchAndReplaceItems) {
-    Logger.debug(
-      `Replacing ${search} with ${replace} in file ${fileName}. Options: ${{
-        search,
-        replace,
-        ignoreCase,
-        injectFile,
-      }}`
-    );
-
-    let flags = "g";
-
-    if (ignoreCase) flags += "i";
-
-    if (injectFile) {
-      const injectFilePath = path.join(configDir, replace);
-
-      Logger.debug(`Reading file to inject: ${injectFilePath}`);
-
-      replace = await readFileContent(injectFilePath);
-    }
-
-    fileContent = fileContent.replace(new RegExp(search, flags), replace);
-  }
-
-  return fileContent;
-};
-
 const createFilePathAndNameFromTemplate = ({
   templatePath,
   shouldReplaceFileName,
@@ -344,41 +259,4 @@ const createFilePathAndNameFromTemplate = ({
     : templateFileName;
 
   return { filePath: path.join(dirPath, fileNameUpdated), fileNameUpdated };
-};
-
-const replaceEnvVariables = (text: string): string => {
-  const pattern = /\{env:([^\}]+)\}/g;
-
-  return text.replace(pattern, (match, envVarName) => {
-    const envVarValue = process.env[envVarName];
-    const valueFound = envVarValue !== undefined;
-
-    if (valueFound) {
-      Logger.debug(
-        `Replacing environment variable tag ${match} with environment variable ${envVarName} with value: ${envVarValue}`
-      );
-
-      return envVarValue;
-    } else {
-      Logger.warning(`Environment variable ${envVarName} not found!`);
-
-      return match;
-    }
-  });
-};
-
-const replaceDateTime = (text: string): string => {
-  const pattern = /\{dateTimeNow:([^\}]+)\}/g;
-
-  const dateNow = new Date();
-
-  return text.replace(pattern, (match, dateTimeNowFormat) => {
-    const result = format(dateNow, dateTimeNowFormat);
-
-    Logger.debug(
-      `Replacing dateTimeNow tag ${match} with the current date and time using the format ${dateTimeNowFormat} with value: ${result}`
-    );
-
-    return result;
-  });
 };

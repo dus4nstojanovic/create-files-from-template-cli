@@ -12,6 +12,7 @@ export interface Options {
   [CLIArg.REPLACE_TEXT_WITH]: string;
   [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: string;
   searchAndReplace: SearchAndReplaceItem[];
+  hooksPath: string;
   configDir: string;
 }
 

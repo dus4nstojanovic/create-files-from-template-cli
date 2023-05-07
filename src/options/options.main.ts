@@ -45,6 +45,8 @@ export const getOptions = async (config: Config): Promise<Options> => {
 
   answers = getSearchAndReplaceItems({ templateConfig, answers });
 
+  answers.hooksPath = templateConfig?.options?.hooksPath;
+
   answers.configDir = config.folder;
 
   return answers as Options;

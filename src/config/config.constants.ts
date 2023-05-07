@@ -12,6 +12,7 @@ export type SearchAndReplaceItem = {
 
 export type ConfigOnlyOptions = {
   searchAndReplace: SearchAndReplaceItem[];
+  hooksPath: string;
 };
 
 export type ConfigTemplateOptions = Omit<

@@ -28,6 +28,7 @@ See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli
 - [The order of the search and replace execution](#the-order-of-the-search-and-replace-execution)
 - [Ignoring the case of the letters on text searching](#ignoring-the-case-of-the-letters-on-text-searching)
 - [Using the special replacement placeholders](#using-the-special-replacement-placeholders)
+- [Custom hooks](#custom-hooks)
 - [Options](#options)
 - [Search and replace options](#search-and-replace-options)
 - [Special replacement placeholders](#special-replacement-placeholders)
@@ -450,6 +451,15 @@ _If you were following one of the previous examples, remove the MyFile folder._
 
 1. Add the **table.html** file to **.cfft.templates** directory:
 
+```
+├── .cfft.templates
+│   ├── component
+│   │   ├── component.tsx
+│   │   ├── component.styles.ts
+│   │   ├── index.ts
+│   ├──table.html
+```
+
 _table.html_
 
 ```html
@@ -595,21 +605,26 @@ _If you were following one of the previous examples, remove the MyFile folder._
 
 ```json
 {
-  "name": "component",
-  "options": {
-    "templatePath": "/.cfft.templates/component",
-    "dirPath": "./{fileName}",
-    "fileNameTextToBeReplaced": "component",
-    "searchAndReplace": [
-      {
-        "search": "{table}",
-        "replace": "/.cfft.templates/table.html",
-        "injectFile": true,
-        "order": -2
-      },
-      { "search": "Cell 1.5", "replace": "HELLO!", "order": -1 }
-    ]
-  }
+  "defaultTemplateName": "component",
+  "templates": [
+    {
+      "name": "component",
+      "options": {
+        "templatePath": "/.cfft.templates/component",
+        "dirPath": "./{fileName}",
+        "fileNameTextToBeReplaced": "component",
+        "searchAndReplace": [
+          {
+            "search": "{table}",
+            "replace": "/.cfft.templates/table.html",
+            "injectFile": true,
+            "order": -2
+          },
+          { "search": "Cell 1.5", "replace": "HELLO!", "order": -1 }
+        ]
+      }
+    }
+  ]
 }
 ```
 
@@ -725,6 +740,94 @@ const MyFile: FC = () => {
 export default MyFile;
 ```
 
+## Custom hooks
+
+### onFileCreated
+
+CFFT allows you to specify the custom logic to be executed after each file creation. To achieve so, you should create a custom `.js` file and implement and export the `onFileCreated()` function. This can be used for various tasks, but one logical and useful task is to use the prettier.
+
+#### Example
+
+_If you were following one of the previous examples, remove the MyFile folder._
+
+> Note: If you want to implement the same behaviour make sure to install and configure the prettier for your project.
+
+1. Update your _package.json_ by adding the `node script`:
+
+_package.json_
+
+```json
+"scripts": {
+  "prettier:only": "prettier",
+}
+```
+
+2. Update the **cfft.config.json** file:
+
+```json
+{
+  "defaultTemplateName": "component",
+  "templates": [
+    {
+      "name": "component",
+      "options": {
+        "templatePath": "/.cfft.templates/component",
+        "dirPath": "./{fileName}",
+        "fileNameTextToBeReplaced": "component",
+        "hooksPath": "/.cfft.templates/hooks/component.js",
+        "searchAndReplace": [
+          {
+            "search": "{table}",
+            "replace": "/.cfft.templates/table.html",
+            "injectFile": true,
+            "order": -2
+          },
+          { "search": "Cell 1.5", "replace": "HELLO!", "order": -1 }
+        ]
+      }
+    }
+  ]
+}
+```
+
+3. Add the `component.js` file:
+
+```
+├── .cfft.templates
+│   ├── component
+│   │   ├── component.tsx
+│   │   ├── component.styles.ts
+│   │   ├── index.ts
+│   ├── hooks
+│   │   ├── component.js
+│   ├──table.html
+```
+
+_component.js_
+
+```js
+const { execSync } = require("child_process");
+
+const onFileCreated = ({ filePath, templatePath }) => {
+  // Run prettier on a created file
+  execSync(`npm run prettier:only -- ${filePath} --write`);
+};
+
+module.exports = {
+  onFileCreated,
+};
+```
+
+> Note: In this example, we are executing the prettier, but you can specify whatever logic you want.
+
+5. Execute the **cfft** command:
+
+```sh
+cfft --fileName MyFile
+```
+
+6. The CLI will create files and execute the `onFileCreated()` hook for each created file!
+
 ## Options
 
 | **Description**                                                               | **Command**                   | **Alias** | **Default**                | **CLI** | **cfft.config** |
@@ -741,6 +844,7 @@ export default MyFile;
 | Text to be used for replacement separated by a separator                      | **replaceTextWith**           |           | {fileName}                 |    ✓    |        ✓        |
 | Custom separator for search and replace                                       | **searchAndReplaceSeparator** |           | ;                          |    ✓    |        ✓        |
 | Add additional search and replace items throug config (with extended options) | **searchAndReplace**          |           |                            |   ❌    |        ✓        |
+| Path to the hooks file relative to _cfft.config.json_                         | **hooksPath**                 |           |                            |   ❌    |        ✓        |
 | Show additional logs                                                          | **--debug**                   |           |                            |    ✓    |       ❌        |
 | See the package version                                                       | **--version**                 |    -v     |                            |    ✓    |       ❌        |
 | Get help                                                                      | **--help**                    |           |                            |    ✓    |       ❌        |
