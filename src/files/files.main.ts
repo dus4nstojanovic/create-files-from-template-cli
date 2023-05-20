@@ -19,10 +19,6 @@ export const createAllDirectoriesAndFilesFromTemplate = async (
 
   Logger.debug("Template path:", templatePath);
 
-  if (!isDirectory(templatePath)) {
-    throw new Error("templatePath must be a directory!");
-  }
-
   const dirPath = createPath(options.dirPath);
   const fileName = options.fileName;
 
@@ -32,9 +28,13 @@ export const createAllDirectoriesAndFilesFromTemplate = async (
 
   Logger.debug("Destination directory created or has already existed!");
 
-  const templateFilesPaths = await getInnerDirectoriesAndFilesPaths(
-    templatePath
-  );
+  let templateFilesPaths: string[];
+
+  if (isDirectory(templatePath)) {
+    templateFilesPaths = await getInnerDirectoriesAndFilesPaths(templatePath);
+  } else {
+    templateFilesPaths = [templatePath];
+  }
 
   Logger.debug("Templates paths:", templateFilesPaths);
 

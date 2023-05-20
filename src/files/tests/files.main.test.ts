@@ -26,6 +26,7 @@ describe("createAllDirectoriesAndFilesFromTemplate", () => {
     [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: ",",
     searchAndReplace: SEARCH_AND_REPLACE,
     configDir: "path",
+    hooksPath: "",
   };
   beforeAll(() => {
     jest.restoreAllMocks();
@@ -72,6 +73,7 @@ describe("createAllDirectoriesAndFilesFromTemplate", () => {
       dirPath: "./test-dir",
       fileName: "test-file",
       fileNameTextToBeReplaced: "",
+      hooksPath: "",
       replaceTextWith: "",
       searchAndReplace: SEARCH_AND_REPLACE,
       searchAndReplaceSeparator: ",",
@@ -88,6 +90,7 @@ describe("createAllDirectoriesAndFilesFromTemplate", () => {
       dirPath: "./test-dir",
       fileName: "test-file",
       fileNameTextToBeReplaced: "",
+      hooksPath: "",
       replaceTextWith: "",
       searchAndReplace: SEARCH_AND_REPLACE,
       searchAndReplaceSeparator: ",",
@@ -97,18 +100,5 @@ describe("createAllDirectoriesAndFilesFromTemplate", () => {
       templatePath: "file2.js",
       textToBeReplaced: "",
     });
-  });
-
-  it("should createAllDirectoriesAndFilesFromTemplate throw an error if templatePath is not a directory", async () => {
-    expect.assertions(1);
-    try {
-      await createAllDirectoriesAndFilesFromTemplate({
-        ...args,
-        templatePath: "component.js",
-      });
-      args;
-    } catch (e: any) {
-      expect(e.message).toBe(`templatePath must be a directory!`);
-    }
   });
 });

@@ -29,6 +29,7 @@ See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli
 - [Ignoring the case of the letters on text searching](#ignoring-the-case-of-the-letters-on-text-searching)
 - [Using the special replacement placeholders](#using-the-special-replacement-placeholders)
 - [Custom hooks](#custom-hooks)
+- [Creating a single file](#creating-a-single-file)
 - [Options](#options)
 - [Search and replace options](#search-and-replace-options)
 - [Special replacement placeholders](#special-replacement-placeholders)
@@ -827,6 +828,79 @@ cfft --fileName MyFile
 ```
 
 6. The CLI will create files and execute the `onFileCreated()` hook for each created file!
+
+## Creating a single file
+
+It is also useful to create a single file. To achieve that, the `templatePath` must point to a file. To create a file in the current folder, update the `dirPath` to `.`.
+
+### Example
+
+1. Add a `component.tsx` file to you templates folder:
+
+```
+├── .cfft.templates
+│   ├── component
+│   │   ├── component.tsx
+│   │   ├── component.styles.ts
+│   │   ├── index.ts
+│   ├── hooks
+│   │   ├── component.js
+│   ├──table.html
+│   ├──component.styles.tsx
+```
+
+_component.styles.tsx_
+
+```js
+import { styled } from "@mui/material";
+
+const COMPONENT_NAME = "FileName";
+
+export const FileNameRoot = styled("div", {
+  name: COMPONENT_NAME,
+  slot: "Root",
+})(({ theme }) => ({}));
+```
+
+2. Add a new template to the **cfft.config.json** file:
+
+```json
+{
+  "defaultTemplateName": "component-styles-file",
+  "templates": [
+    {
+      "name": "component-styles-file",
+      "options": {
+        "templatePath": "/.cfft.templates/component.styles.tsx",
+        "dirPath": ".",
+        "fileNameTextToBeReplaced": "component",
+        "searchAndReplace": [{ "search": "FileName", "replace": "{fileName}" }]
+      }
+    }
+  ]
+}
+```
+
+3. Execute the **cfft** command:
+
+```sh
+cfft -t component-styles-file -n MyComponent
+```
+
+4. The CLI will create the `MyComponent.styles.tsx` file and replace the _FileName_ with the provided name (_MyComponent_) file:
+
+_MyComponent.styles.tsx_
+
+```js
+import { styled } from "@mui/material";
+
+const COMPONENT_NAME = "MyComponent";
+
+export const MyComponentRoot = styled("div", {
+  name: COMPONENT_NAME,
+  slot: "Root",
+})(({ theme }) => ({}));
+```
 
 ## Options
 

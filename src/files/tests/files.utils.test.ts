@@ -226,6 +226,7 @@ describe("createFileOrDirectoryFromTemplate", () => {
     [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: ",",
     searchAndReplace: [],
     configDir: "path",
+    hooksPath: "",
   };
 
   beforeAll(() => {
