@@ -835,7 +835,7 @@ It is also useful to create a single file. To achieve that, the `templatePath` m
 
 ### Example
 
-1. Add a `component.tsx` file to you templates folder:
+1. Add a `component.styles.tsx` file to you templates folder:
 
 ```
 ├── .cfft.templates
