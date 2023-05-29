@@ -27,6 +27,8 @@ export const enum CLIArg {
   TEXT_TO_BE_REPLACED = "textToBeReplaced",
   REPLACE_TEXT_WITH = "replaceTextWith",
   SEARCH_AND_REPLACE_SEPARATOR = "searchAndReplaceSeparator",
+  LIST = "list",
+  LIST_DETAILED = "listDetailed",
   DEBUG = "debug",
   VERSION = "version",
   HELP = "help",
@@ -36,6 +38,7 @@ export const enum CLIArgAlias {
   FILE_NAME = "n",
   TEMPLATE_NAME = "t",
   VERSION = "v",
+  LIST = "l",
 }
 
 export const CLI_ARGS_TYPE = {
@@ -52,11 +55,14 @@ export const CLI_ARGS_TYPE = {
   "--debug": String,
   "--version": Boolean,
   "--help": Boolean,
+  "--list": Boolean,
+  "--listDetailed": Boolean,
 
   // Aliases
   "-n": "--fileName",
   "-t": "--template",
   "-v": "--version",
+  "-l": "--list",
 };
 
 export const BOOLEAN_CLI_ARGS: CLIArg[] = [

@@ -49,6 +49,8 @@ export const writeHelpTable = () => {
       "",
       "Custom separator for search and replace",
     ],
+    [CLIArg.LIST, CLIArgAlias.LIST, "List all templates"],
+    [CLIArg.LIST_DETAILED, "", "List all templates with additional info"],
     [
       CLIArg.VERSION,
       CLIArgAlias.VERSION,

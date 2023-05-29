@@ -30,6 +30,7 @@ See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli
 - [Using the special replacement placeholders](#using-the-special-replacement-placeholders)
 - [Custom hooks](#custom-hooks)
 - [Creating a single file](#creating-a-single-file)
+- [List all templates](#list-all-templates)
 - [Options](#options)
 - [Search and replace options](#search-and-replace-options)
 - [Special replacement placeholders](#special-replacement-placeholders)
@@ -902,6 +903,84 @@ export const MyComponentRoot = styled("div", {
 })(({ theme }) => ({}));
 ```
 
+## List all templates
+
+To list all registered template, you could use the `--list` or `-l` command.
+
+To add description to your template and list all registered templates including descriptions, use the `--listDetailed` command.
+
+### Example
+
+1. Update the **cfft.config.json** file:
+
+```json
+{
+  "defaultTemplateName": "component",
+  "templates": [
+    {
+      "name": "component",
+      "description": "Creates a component",
+      "options": {
+        "templatePath": "/.cfft.templates/component",
+        "dirPath": "./{fileName}",
+        "fileNameTextToBeReplaced": "component",
+        "searchAndReplace": [
+          {
+            "search": "FileName",
+            "replace": "{fileName}"
+          },
+          {
+            "search": "FC",
+            "replace": "FunctionComponent"
+          }
+        ]
+      }
+    },
+    {
+      "name": "css",
+      "description": "Creates a css file",
+      "options": {
+        "templatePath": "/.cfft.templates/css",
+        "dirPath": "./{fileName}",
+        "shouldReplaceFileContent": false,
+        "shouldReplaceFileName": false
+      }
+    }
+  ]
+}
+```
+
+2. Execute the `--list` command to list all templates:
+
+```sh
+cfft --list
+```
+
+3. The result:
+
+```sh
+component
+css
+```
+
+4. Now execute the `--listDetailed` command to list all templates including description:
+
+```sh
+cfft --listDetailed
+```
+
+5. The result:
+
+```sh
+┌───────────┬─────────────────────┐
+│ Name      │ Description         │
+├───────────┼─────────────────────┤
+│ component │ Creates a component │
+├───────────┼─────────────────────┤
+│ css       │ Creates a css file  │
+└───────────┴─────────────────────┘
+```
+
 ## Options
 
 | **Description**                                                               | **Command**                   | **Alias** | **Default**                | **CLI** | **cfft.config** |
@@ -919,9 +998,11 @@ export const MyComponentRoot = styled("div", {
 | Custom separator for search and replace                                       | **searchAndReplaceSeparator** |           | ;                          |    ✓    |        ✓        |
 | Add additional search and replace items throug config (with extended options) | **searchAndReplace**          |           |                            |   ❌    |        ✓        |
 | Path to the hooks file relative to _cfft.config.json_                         | **hooksPath**                 |           |                            |   ❌    |        ✓        |
-| Show additional logs                                                          | **--debug**                   |           |                            |    ✓    |       ❌        |
-| See the package version                                                       | **--version**                 |    -v     |                            |    ✓    |       ❌        |
-| Get help                                                                      | **--help**                    |           |                            |    ✓    |       ❌        |
+| Show additional logs                                                          | **debug**                     |           |                            |    ✓    |       ❌        |
+| List all templates                                                            | **list**                      |    -l     |                            |    ✓    |       ❌        |
+| List all templates with additional info                                       | **listDetailed**              |           |                            |    ✓    |       ❌        |
+| See the package version                                                       | **version**                   |    -v     |                            |    ✓    |       ❌        |
+| Get help                                                                      | **help**                      |           |                            |    ✓    |       ❌        |
 
 > Note: When specifing an option in a terminal, always add _--_ as prefix. Example:
 

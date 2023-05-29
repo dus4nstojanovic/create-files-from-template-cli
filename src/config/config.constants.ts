@@ -23,6 +23,7 @@ export type ConfigTemplateOptions = Omit<
 
 export type TemplateConfig = {
   name: string;
+  description?: string;
   options: Partial<ConfigTemplateOptions>;
 };
 

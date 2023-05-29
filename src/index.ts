@@ -5,6 +5,7 @@ import Logger from "./logger";
 import { createAllDirectoriesAndFilesFromTemplate } from "./files";
 import { getOrCreateConfig } from "./config";
 import { writeHelpTable } from "./help";
+import { listTemplates } from "./list";
 
 const run = async () => {
   try {
@@ -15,6 +16,11 @@ const run = async () => {
 
     if (extractArg(CLIArg.HELP)) {
       writeHelpTable();
+      return;
+    }
+
+    if (extractArg(CLIArg.LIST) || extractArg(CLIArg.LIST_DETAILED)) {
+      listTemplates(extractArg(CLIArg.LIST_DETAILED));
       return;
     }
 
