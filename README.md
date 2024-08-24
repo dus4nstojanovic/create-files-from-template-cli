@@ -18,6 +18,10 @@ You can use this CLI for any language or framework (JavaScript, Node, React, Ang
 
 See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli/releases/) to see what is changed in the latest version.
 
+## Related repositories
+
+[Create Files From Template Base](https://github.com/dus4nstojanovic/create-files-from-template-base) - Includes core utilities required for CFFT apps to work.
+
 ## Table of contents
 
 - [Getting started (Tutorial)](#getting-started-tutorial)
