@@ -6,8 +6,11 @@ import { listTemplates } from "./list";
 import { getOrCreateConfig } from "@beezydev/create-files-from-template-base/config";
 import { createAllDirectoriesAndFilesFromTemplate } from "@beezydev/create-files-from-template-base/files";
 import Logger from "@beezydev/create-files-from-template-base/logger";
+import { overrideLogger } from "./logger.utils";
 
 const run = async () => {
+  overrideLogger();
+
   try {
     if (extractArg(CLIArg.VERSION)) {
       Logger.log(require("./package.json").version);
