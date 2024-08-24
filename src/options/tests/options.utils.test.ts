@@ -11,9 +11,11 @@ describe("setArg", () => {
 
   it("should set argument correctly when not empty", () => {
     expect(
-      setArg(CLIArg.FILE_NAME, "fileName", { [CLIArg.DEBUG]: true })
+      setArg(CLIArg.FILE_NAME, "fileName", {
+        [CLIArg.SHOULD_REPLACE_FILE_NAME]: true,
+      })
     ).toEqual({
-      [CLIArg.DEBUG]: true,
+      [CLIArg.SHOULD_REPLACE_FILE_NAME]: true,
       [CLIArg.FILE_NAME]: "fileName",
     });
   });
@@ -104,7 +106,7 @@ describe("extractArg", () => {
 
 describe("hasArg", () => {
   it("should be truthy for provided value", () => {
-    expect(hasArg(CLIArg.DEBUG)).toBeTruthy();
+    expect(hasArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT)).toBeTruthy();
   });
 
   it("should be falsy when value is not provided", () => {

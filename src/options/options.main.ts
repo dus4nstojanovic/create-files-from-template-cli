@@ -16,11 +16,6 @@ import {
 import { Options } from "@beezydev/create-files-from-template-base/options";
 
 /**
- * Checks is the debug argument provided or not
- */
-export const isDebug = (): boolean => extractArg(CLIArg.DEBUG) as boolean;
-
-/**
  * Gets all option using the provided configuration, console arguments or inputs
  * @param config The configuration read from the cfft.config.json file
  * @returns All provided options

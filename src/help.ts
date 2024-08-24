@@ -56,7 +56,6 @@ export const writeHelpTable = () => {
       CLIArgAlias.VERSION,
       "Show the current version of the package",
     ],
-    [CLIArg.DEBUG, "", "Show additional logs"],
   ];
 
   rows = rows.map(([command, alias, ...rest]) => [

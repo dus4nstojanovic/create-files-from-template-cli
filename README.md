@@ -48,7 +48,7 @@ See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli
 npm install -g @beezydev/create-files-from-template-cli
 ```
 
-2. The next step is to create a configuration file - _cfft.config.json_. It can be done automatically (recommanded), or you can do it manually. **Navigate your terminal to the _root_ folder** of your application.
+2. The next step is to create a configuration file - _cfft.config.json_. It can be done automatically (recommended), or you can do it manually. **Navigate your terminal to the _root_ folder** of your application.
 
 3. **Execute the cfft command** to create a configuration file:
 
@@ -174,7 +174,7 @@ cfft
 │   │   ├── index.ts
 ```
 
-Additionaly, the CLI replaced the _FileName_ text with the entered file name:
+Additionally, the CLI replaced the _FileName_ text with the entered file name:
 
 _MyFile.styles.ts_ (unchanged)
 
@@ -756,7 +756,7 @@ CFFT allows you to specify the custom logic to be executed after each file creat
 
 _If you were following one of the previous examples, remove the MyFile folder._
 
-> Note: If you want to implement the same behaviour make sure to install and configure the prettier for your project.
+> Note: If you want to implement the same behavior make sure to install and configure the prettier for your project.
 
 1. Update your _package.json_ by adding the `node script`:
 
@@ -987,28 +987,27 @@ cfft --listDetailed
 
 ## Options
 
-| **Description**                                                               | **Command**                   | **Alias** | **Default**                | **CLI** | **cfft.config** |
-| :---------------------------------------------------------------------------- | :---------------------------- | :-------: | :------------------------- | :-----: | :-------------: |
-| File name to be used                                                          | **fileName**                  |    -n     |                            |    ✓    |       ❌        |
-| Path to the location where to generate files                                  | **dirPath**                   |           | ./{fileName}               |    ✓    |        ✓        |
-| Name of the template to use                                                   | **template**                  |    -t     |                            |    ✓    |       ❌        |
-| Path to the specific template folder                                          | **templatePath**              |           | /.cfft.templates/component |    ✓    |        ✓        |
-| Default template name to be used every time when --template is not specified  | **defaultTemplateName**       |           | component                  |   ❌    |        ✓        |
-| Should or not CLI replace a file name                                         | **shouldReplaceFileName**     |           | true                       |    ✓    |        ✓        |
-| Wich part of the file name should be replaced                                 | **fileNameTextToBeReplaced**  |           | component                  |    ✓    |        ✓        |
-| Should or not CLI replace a file content                                      | **shouldReplaceFileContent**  |           | true                       |    ✓    |        ✓        |
-| Text (or regex) to be replaced separated by a search and replace separator    | **textToBeReplaced**          |           | FileName                   |    ✓    |        ✓        |
-| Text to be used for replacement separated by a separator                      | **replaceTextWith**           |           | {fileName}                 |    ✓    |        ✓        |
-| Custom separator for search and replace                                       | **searchAndReplaceSeparator** |           | ;                          |    ✓    |        ✓        |
-| Add additional search and replace items throug config (with extended options) | **searchAndReplace**          |           |                            |   ❌    |        ✓        |
-| Path to the hooks file relative to _cfft.config.json_                         | **hooksPath**                 |           |                            |   ❌    |        ✓        |
-| Show additional logs                                                          | **debug**                     |           |                            |    ✓    |       ❌        |
-| List all templates                                                            | **list**                      |    -l     |                            |    ✓    |       ❌        |
-| List all templates with additional info                                       | **listDetailed**              |           |                            |    ✓    |       ❌        |
-| See the package version                                                       | **version**                   |    -v     |                            |    ✓    |       ❌        |
-| Get help                                                                      | **help**                      |           |                            |    ✓    |       ❌        |
+| **Description**                                                                | **Command**                   | **Alias** | **Default**                | **CLI** | **cfft.config** |
+| :----------------------------------------------------------------------------- | :---------------------------- | :-------: | :------------------------- | :-----: | :-------------: |
+| File name to be used                                                           | **fileName**                  |    -n     |                            |    ✓    |       ❌        |
+| Path to the location where to generate files                                   | **dirPath**                   |           | ./{fileName}               |    ✓    |        ✓        |
+| Name of the template to use                                                    | **template**                  |    -t     |                            |    ✓    |       ❌        |
+| Path to the specific template folder                                           | **templatePath**              |           | /.cfft.templates/component |    ✓    |        ✓        |
+| Default template name to be used every time when --template is not specified   | **defaultTemplateName**       |           | component                  |   ❌    |        ✓        |
+| Should or not CLI replace a file name                                          | **shouldReplaceFileName**     |           | true                       |    ✓    |        ✓        |
+| Which part of the file name should be replaced                                 | **fileNameTextToBeReplaced**  |           | component                  |    ✓    |        ✓        |
+| Should or not CLI replace a file content                                       | **shouldReplaceFileContent**  |           | true                       |    ✓    |        ✓        |
+| Text (or regex) to be replaced separated by a search and replace separator     | **textToBeReplaced**          |           | FileName                   |    ✓    |        ✓        |
+| Text to be used for replacement separated by a separator                       | **replaceTextWith**           |           | {fileName}                 |    ✓    |        ✓        |
+| Custom separator for search and replace                                        | **searchAndReplaceSeparator** |           | ;                          |    ✓    |        ✓        |
+| Add additional search and replace items through config (with extended options) | **searchAndReplace**          |           |                            |   ❌    |        ✓        |
+| Path to the hooks file relative to _cfft.config.json_                          | **hooksPath**                 |           |                            |   ❌    |        ✓        |
+| List all templates                                                             | **list**                      |    -l     |                            |    ✓    |       ❌        |
+| List all templates with additional info                                        | **listDetailed**              |           |                            |    ✓    |       ❌        |
+| See the package version                                                        | **version**                   |    -v     |                            |    ✓    |       ❌        |
+| Get help                                                                       | **help**                      |           |                            |    ✓    |       ❌        |
 
-> Note: When specifing an option in a terminal, always add _--_ as prefix. Example:
+> Note: When specifying an option in a terminal, always add _--_ as prefix. Example:
 
 ```sh
 cfft --template MyTemplate
