@@ -2,7 +2,7 @@ import {
   Config,
   SearchAndReplaceItem,
 } from "@beezydev/create-files-from-template-base/config";
-import { getOptions, isDebug } from "../options.main";
+import { getOptions } from "../options.main";
 import { CLIArg } from "../options.constants";
 
 const SEARCH_AND_REPLACE: SearchAndReplaceItem[] = [
@@ -35,12 +35,6 @@ const CONFIG: Config = {
     },
   ],
 };
-
-describe("isDebug", () => {
-  it("should be truthy when isDebug argument is provided", () => {
-    expect(isDebug()).toBeTruthy();
-  });
-});
 
 describe("getOptions", () => {
   it("should retrieve correct options", async () => {

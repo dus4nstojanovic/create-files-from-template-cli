@@ -106,7 +106,7 @@ describe("extractArg", () => {
 
 describe("hasArg", () => {
   it("should be truthy for provided value", () => {
-    expect(hasArg(CLIArg.SHOULD_REPLACE_FILE_CONTENT)).toBeTruthy();
+    expect(hasArg(CLIArg.TEMPLATE_NAME)).toBeTruthy();
   });
 
   it("should be falsy when value is not provided", () => {

@@ -26,7 +26,7 @@ const run = async () => {
 
     Logger.success("create-files-cli has started");
 
-    const { config, created } = await getOrCreateConfig();
+    const { config, created } = await getOrCreateConfig(process.cwd());
 
     if (created) return;
 
@@ -38,7 +38,7 @@ const run = async () => {
 
     Logger.info("Creating files...");
 
-    await createAllDirectoriesAndFilesFromTemplate(options);
+    await createAllDirectoriesAndFilesFromTemplate(process.cwd(), options);
 
     Logger.success("💪 Files created!");
   } catch (e) {
