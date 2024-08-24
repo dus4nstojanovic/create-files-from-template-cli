@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { CLIArg, extractArg, getOptions } from "./options";
-import Logger from "./logger";
-import { createAllDirectoriesAndFilesFromTemplate } from "./files";
-import { getOrCreateConfig } from "./config";
 import { writeHelpTable } from "./help";
 import { listTemplates } from "./list";
+import { getOrCreateConfig } from "@beezydev/create-files-from-template-base/config";
+import { createAllDirectoriesAndFilesFromTemplate } from "@beezydev/create-files-from-template-base/files";
+import Logger from "@beezydev/create-files-from-template-base/logger";
 
 const run = async () => {
   try {
@@ -35,7 +35,6 @@ const run = async () => {
     const options = await getOptions(config);
 
     Logger.success("✔ Options retrieved");
-    Logger.debug("Options\n", JSON.stringify(options, undefined, 2));
 
     Logger.info("Creating files...");
 

@@ -1,6 +1,9 @@
 import Table from "cli-table";
-import { Config, findConfig } from "./config";
-import Logger from "./logger";
+import {
+  Config,
+  findConfig,
+} from "@beezydev/create-files-from-template-base/config";
+import Logger from "@beezydev/create-files-from-template-base/logger";
 
 export const listTemplates = async (isDetailed: boolean): Promise<void> => {
   const config = await findConfig();

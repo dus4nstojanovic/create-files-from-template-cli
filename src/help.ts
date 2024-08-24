@@ -1,6 +1,6 @@
 import Table from "cli-table";
 import { CLIArg, CLIArgAlias } from "./options";
-import Logger from "./logger";
+import Logger from "@beezydev/create-files-from-template-base/logger";
 
 export const writeHelpTable = () => {
   const table = new Table({
@@ -27,7 +27,7 @@ export const writeHelpTable = () => {
     [
       CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED,
       "",
-      "Wich part of the file name should be replaced",
+      "Which part of the file name should be replaced",
     ],
     [
       CLIArg.SHOULD_REPLACE_FILE_CONTENT,

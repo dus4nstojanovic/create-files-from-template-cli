@@ -1,21 +1,3 @@
-import { SearchAndReplaceItem } from "../config";
-
-export interface Options {
-  [CLIArg.TEMPLATE_NAME]: string;
-  [CLIArg.FILE_NAME]: string;
-  [CLIArg.DIR_PATH]: string;
-  [CLIArg.TEMPLATE_PATH]: string;
-  [CLIArg.SHOULD_REPLACE_FILE_CONTENT]: boolean;
-  [CLIArg.SHOULD_REPLACE_FILE_NAME]: boolean;
-  [CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED]: string;
-  [CLIArg.TEXT_TO_BE_REPLACED]: string;
-  [CLIArg.REPLACE_TEXT_WITH]: string;
-  [CLIArg.SEARCH_AND_REPLACE_SEPARATOR]: string;
-  searchAndReplace: SearchAndReplaceItem[];
-  hooksPath: string;
-  configDir: string;
-}
-
 export const enum CLIArg {
   FILE_NAME = "fileName",
   DIR_PATH = "dirPath",

@@ -1,5 +1,9 @@
 import { Answers } from "inquirer";
-import { Config, getTemplateFromConfig, TemplateConfig } from "../config";
+import {
+  Config,
+  getTemplateFromConfig,
+  TemplateConfig,
+} from "@beezydev/create-files-from-template-base/config";
 import path from "path";
 import {
   CLIArg,
@@ -7,9 +11,9 @@ import {
   getConfirmArg,
   getInputArg,
   hasArg,
-  Options,
   setArg,
 } from ".";
+import { Options } from "@beezydev/create-files-from-template-base/options";
 
 /**
  * Checks is the debug argument provided or not
@@ -41,7 +45,7 @@ export const getOptions = async (config: Config): Promise<Options> => {
 
   answers = await getFileContentTextReplacement({ templateConfig, answers });
 
-  answers = getSearchAndReplaceCharater({ templateConfig, answers });
+  answers = getSearchAndReplaceCharacter({ templateConfig, answers });
 
   answers = getSearchAndReplaceItems({ templateConfig, answers });
 
@@ -258,7 +262,7 @@ const getFileContentTextReplacement = async ({
   return answers;
 };
 
-const getSearchAndReplaceCharater = ({
+const getSearchAndReplaceCharacter = ({
   templateConfig,
   answers,
 }: {

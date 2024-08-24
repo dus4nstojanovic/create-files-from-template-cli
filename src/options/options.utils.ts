@@ -2,7 +2,7 @@ import { Answers } from "inquirer";
 import { askConfirmQuestion, askInputQuestion } from "../questions";
 import arg from "arg";
 import { isBoolean } from "../validation";
-import { TemplateConfig } from "../config";
+import { TemplateConfig } from "@beezydev/create-files-from-template-base/config";
 import { BOOLEAN_CLI_ARGS, CLIArg, CLI_ARGS_TYPE } from ".";
 
 /**

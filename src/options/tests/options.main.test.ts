@@ -1,4 +1,7 @@
-import { Config, SearchAndReplaceItem } from "./../../config/config.constants";
+import {
+  Config,
+  SearchAndReplaceItem,
+} from "@beezydev/create-files-from-template-base/config";
 import { getOptions, isDebug } from "../options.main";
 import { CLIArg } from "../options.constants";
 
