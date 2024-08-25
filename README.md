@@ -20,6 +20,7 @@ See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli
 
 ## Related repositories
 
+[Create Files From Template VS Code Extension](https://github.com/dus4nstojanovic/create-files-from-template-vscode) - Visual Studio Extension - Use the context menu command to create a list of files from templates.
 [Create Files From Template Base](https://github.com/dus4nstojanovic/create-files-from-template-base) - Includes core utilities required for CFFT apps to work.
 
 ## Table of contents
