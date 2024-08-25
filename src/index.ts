@@ -29,7 +29,9 @@ const run = async () => {
 
     Logger.success("create-files-cli has started");
 
-    const { config, created } = await getOrCreateConfig(process.cwd());
+    const { config, created } = await getOrCreateConfig({
+      currentFolderPath: process.cwd(),
+    });
 
     if (created) return;
 

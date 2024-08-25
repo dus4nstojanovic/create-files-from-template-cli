@@ -1,6 +1,6 @@
 {
   "name": "create-files-from-templates-cli",
-  "version": "1.5.9",
+  "version": "1.5.10",
   "description": "A simple but powerful CLI to generate a list of files from templates.",
   "main": "index.js",
   "bin": {
@@ -45,7 +45,7 @@
     "ts-jest": "^29.1.0"
   },
   "dependencies": {
-    "@beezydev/create-files-from-template-base": "^1.5.9",
+    "@beezydev/create-files-from-template-base": "^1.5.10",
     "arg": "^5.0.2",
     "chalk": "^5.2.0",
     "cli-table": "^0.3.11",

@@ -11,7 +11,6 @@ export const enum CLIArg {
   SEARCH_AND_REPLACE_SEPARATOR = "searchAndReplaceSeparator",
   LIST = "list",
   LIST_DETAILED = "listDetailed",
-  DEBUG = "debug",
   VERSION = "version",
   HELP = "help",
 }
@@ -34,7 +33,6 @@ export const CLI_ARGS_TYPE = {
   "--textToBeReplaced": String,
   "--replaceTextWith": String,
   "--searchAndReplaceSeparator": String,
-  "--debug": String,
   "--version": Boolean,
   "--help": Boolean,
   "--list": Boolean,

@@ -82,6 +82,8 @@ You should see the message that _cfft.config.json_ is created with a default val
 
 You can edit these values however you want. See the _Options_ section where it is explained which options exist.
 
+> Note: From version 1.5.10 onwards this command also creates the `.cfft.templates` directory and the `component` files for demo purposes. Feel free to edit or remove these files.
+
 4. The next step is to create your templates (you can create one or more templates). Let's use a default `templatePath`. In your _root_ folder, create the following structure:
 
 ```
