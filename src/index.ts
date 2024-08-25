@@ -21,7 +21,6 @@ const run = async () => {
       writeHelpTable();
       return;
     }
-
     if (extractArg(CLIArg.LIST) || extractArg(CLIArg.LIST_DETAILED)) {
       listTemplates(extractArg(CLIArg.LIST_DETAILED));
       return;
