@@ -44,10 +44,11 @@ describe("getOptions", () => {
       [CLIArg.TEMPLATE_NAME]: "templateNameArgValue",
       [CLIArg.FILE_NAME]: "value",
       [CLIArg.DIR_PATH]: "./value",
-      [CLIArg.TEMPLATE_PATH]: "path/.cfft.templates/component",
+      [CLIArg.TEMPLATE_PATH]: "/.cfft.templates/component",
       [CLIArg.SHOULD_REPLACE_FILE_NAME]: true,
       [CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED]:
         "fileNameTextToBeReplacedArgValue",
+      hooksPath: undefined,
       [CLIArg.SHOULD_REPLACE_FILE_CONTENT]: true,
       [CLIArg.TEXT_TO_BE_REPLACED]: "FileName",
       [CLIArg.REPLACE_TEXT_WITH]: "value",

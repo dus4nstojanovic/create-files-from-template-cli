@@ -42,7 +42,11 @@ const run = async () => {
 
     Logger.info("Creating files...");
 
-    await createAllDirectoriesAndFilesFromTemplate(process.cwd(), options);
+    await createAllDirectoriesAndFilesFromTemplate(
+      process.cwd(),
+      options,
+      config?.folder
+    );
 
     Logger.success("💪 Files created!");
   } catch (e) {

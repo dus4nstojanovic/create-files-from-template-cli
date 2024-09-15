@@ -4,7 +4,6 @@ import {
   getTemplateFromConfig,
   TemplateConfig,
 } from "@beezydev/create-files-from-template-base/config";
-import path from "path";
 import {
   CLIArg,
   extractArg,
@@ -29,12 +28,11 @@ export const getOptions = async (config: Config): Promise<Options> => {
     config,
     (answers as Options)[CLIArg.TEMPLATE_NAME]
   );
-
   answers = await getFileName(answers);
 
   answers = await getDirPath({ templateConfig, answers });
 
-  answers = await getTemplatePath({ config, templateConfig, answers });
+  answers = await getTemplatePath({ templateConfig, answers });
 
   answers = await getFileNameTextReplacement({ templateConfig, answers });
 
@@ -120,11 +118,9 @@ const getDirPath = async ({
 };
 
 const getTemplatePath = async ({
-  config,
   templateConfig,
   answers,
 }: {
-  config: Config;
   templateConfig: TemplateConfig | undefined;
   answers: Answers;
 }): Promise<Answers> => {
@@ -134,13 +130,6 @@ const getTemplatePath = async ({
     answers,
     templateConfig,
   });
-
-  if (answers[CLIArg.TEMPLATE_PATH].startsWith("/")) {
-    answers[CLIArg.TEMPLATE_PATH] = path.join(
-      config.folder,
-      answers[CLIArg.TEMPLATE_PATH]
-    );
-  }
 
   return answers;
 };
