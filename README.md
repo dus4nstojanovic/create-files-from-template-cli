@@ -29,6 +29,7 @@ See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli
 - [Filling the missing configuration options](#filling-the-missing-configuration-options)
 - [Filling the missing configuration options using the CLI arguments](#filling-the-missing-configuration-options-using-the-cli-arguments)
 - [Search and replace - replace multiple placeholders](#search-and-replace---replace-multiple-placeholders)
+- [Convert placeholder cases](#convert-placeholder-cases)
 - [Inject a file content](#injecting-a-file-content)
 - [The order of the search and replace execution](#the-order-of-the-search-and-replace-execution)
 - [Ignoring the case of the letters on text searching](#ignoring-the-case-of-the-letters-on-text-searching)
@@ -363,6 +364,146 @@ const MyFile: FunctionComponent = () => {
 };
 
 export default MyFile;
+```
+
+## Convert placeholder cases
+
+CFFT allows you to convert the string from your template to a different case. This is especially powerful if you want to convert the "file name" placeholder.
+
+### The available convertors
+
+- **Camel case** - param-case -> paramCase
+- **Snake case** - camelCase -> camel_case
+- **Pascal case** - param-case -> ParamCase
+- **Dot case** - Title Case -> title.case
+- **Path case** - camelCase -> camel/case
+- **Text case** - camelCase -> camel case
+- **Sentence case** - camelCase -> Camel case
+- **Header case** - param-case -> Param Case
+- **Lower case** - Title Case -> title case
+- **Upper case** - param-case -> PARAM-CASE
+- **Kebab case** - Title Case -> title-case
+- **Lower snake case** ParamCase -> param-case
+- **Upper snake case** ParamCase -> PARAM-CASE
+
+### Usage
+
+To apply the case converter to any string from you template, just wrap it with #(<TextToBeConverted>, <Option>).
+
+The option can be applied in a several ways. Options are case insensitive, and characters such as ` `, `_`, `-`, `.`, `/`, `\` are ignored.
+For example, if you want to provide the Pascal case, you can provide it in one of the following ways:
+
+- `#(TextToBeConverted, PascalCase)`,
+- `#(TextToBeConverted, Pascal case)`,
+- `#(TextToBeConverted, pascalcase)`,
+- `#(TextToBeConverted, PASCAL_CASE)`,
+- `#(TextToBeConverted, PASCAL-CASE)`,
+- `...`
+
+### Example
+
+1. Add the `constants.ts` file to your template folder (**.cfft.templates**):
+
+```
+├── .cfft.templates
+│   ├── constants.ts
+```
+
+2. File the file content:
+
+_constants.ts_
+
+```js
+import { routes } from 'constants/routes';
+
+// Routes 1 to 15 demonstrate available converters
+const route1 = routes.#(param-case, CAMEL_CASE).route;
+const route2 = routes.#(param-case, SNAKE_CASE).route;
+const route3 = routes.#(param-case, PASCAL_CASE).route;
+const route4 = routes.#(param-case, DOT_CASE).route;
+const route5 = routes.#(param-case, PATH_CASE).route;
+const route6 = routes.#(param-case, TEXT_CASE).route;
+const route7 = routes.#(param-case, SENTENCE_CASE).route;
+const route8 = routes.#(param-case, HEADER_CASE).route;
+const route9 = routes.#(paRam-case, LOWER_CASE).route;
+const route10 = routes.#(param-case, UPPER_CASE).route;
+const route11 = routes.#(param-case, KEBAB_CASE).route;
+const route12 = routes.#(ParamCase, UPPER_SNAKE_CASE).route;
+const route13 = routes.#(ParamCase, LOWER_SNAKE_CASE).route;
+const route14 = routes.#(FileName, LOWER_SNAKE_CASE).route;
+const route15 = routes.#(FileName,UPPER_SNAKE_CASE).route;
+
+// Routes 16 to 26 demonstrate different ways to apply the same option
+const route16 = routes.#(param-case, PASCAL_CASE).route;
+const route17 = routes.#(param-case, PASCALCASE).route;
+const route18 = routes.#(param-case, pascalcase).route;
+const route19 = routes.#(param-case, PascalCase).route;
+const route20 = routes.#(param-case, pascalCase).route;
+const route21 = routes.#(param-case, pascal.Case).route;
+const route22 = routes.#(param-case, pascal/case).route;
+const route23 = routes.#(param-case, pascal\case).route;
+const route24 = routes.#(param-case, PASCAL-case).route;
+const route25 = routes.#(param-case, PASCAL case).route;
+const route26 = routes.#(param-case, pascal case).route;
+```
+
+3. Update your **cfft.config.json** by adding the following configuration to the templates array:
+
+```json
+{
+  "name": "constants",
+  "description": "Creates a constants file",
+  "options": {
+    "templatePath": "/.cfft.templates/constants.ts",
+    "dirPath": ".",
+    "fileNameTextToBeReplaced": "constants",
+    "shouldReplaceFileContent": true,
+    "searchAndReplace": [{ "search": "FileName", "replace": "{fileName}" }]
+  }
+}
+```
+
+4. Execute the **cfft** command:
+
+```sh
+cfft --template constants --fileName MyConstants
+```
+
+5. The CLI will create the `MyConstants.ts` file with the following content:
+
+```js
+import { routes } from 'constants/routes';
+
+// Routes 1 to 15 demonstrate available converters
+const route1 = routes.paramCase.route;
+const route2 = routes.param_case.route;
+const route3 = routes.ParamCase.route;
+const route4 = routes.param.case.route;
+const route5 = routes.param/case.route;
+const route6 = routes.param case.route;
+const route7 = routes.Param case.route;
+const route8 = routes.Param Case.route;
+const route9 = routes.param-case.route;
+const route10 = routes.PARAM-CASE.route;
+const route11 = routes.param-case.route;
+const route12 = routes.PARAM_CASE.route;
+const route13 = routes.param_case.route;
+const route14 = routes.my_constants.route;
+const route15 = routes.MY_CONSTANTS.route;
+
+// Routes 16 to 26 demonstrate different ways to apply the same option
+const route16 = routes.ParamCase.route;
+const route17 = routes.ParamCase.route;
+const route18 = routes.ParamCase.route;
+const route19 = routes.ParamCase.route;
+const route20 = routes.ParamCase.route;
+const route21 = routes.ParamCase.route;
+const route22 = routes.ParamCase.route;
+const route23 = routes.ParamCase.route;
+const route24 = routes.ParamCase.route;
+const route25 = routes.ParamCase.route;
+const route26 = routes.ParamCase.route;
+
 ```
 
 ## Add additional templates
