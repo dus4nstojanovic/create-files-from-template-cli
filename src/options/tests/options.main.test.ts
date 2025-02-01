@@ -4,6 +4,7 @@ import {
 } from "@beezydev/create-files-from-template-base/config";
 import { getOptions } from "../options.main";
 import { CLIArg } from "../options.constants";
+import { input } from "@inquirer/prompts";
 
 const SEARCH_AND_REPLACE: SearchAndReplaceItem[] = [
   { search: "FileName", replace: "{fileName}", ignoreCase: true },
@@ -36,8 +37,14 @@ const CONFIG: Config = {
   ],
 };
 
+jest.mock("@inquirer/prompts", () => ({
+  input: jest.fn(),
+  confirm: jest.fn(),
+}));
+
 describe("getOptions", () => {
   it("should retrieve correct options", async () => {
+    (input as jest.Mock).mockResolvedValue("value");
     const options = await getOptions({ ...CONFIG });
 
     expect(options).toEqual({

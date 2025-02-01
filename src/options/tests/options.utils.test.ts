@@ -1,4 +1,4 @@
-import { Answers } from "inquirer";
+import { Answers } from "../../types";
 import { CLIArg } from "../options.constants";
 import { extractArg, getInputArg, hasArg, setArg } from "./../options.utils";
 
@@ -70,7 +70,7 @@ describe("getInputArg", () => {
   });
 
   it("should replace the {fileName} placeholder correctly", async () => {
-    let answers: Answers = {
+    let answers: Partial<Answers> = {
       [CLIArg.FILE_NAME]: "MyFile",
     };
 

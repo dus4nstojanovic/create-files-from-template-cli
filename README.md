@@ -41,6 +41,7 @@ See [Releases](https://github.com/dus4nstojanovic/create-files-from-template-cli
 - [Search and replace options](#search-and-replace-options)
 - [Special replacement placeholders](#special-replacement-placeholders)
 - [Placeholders](#placeholders)
+- [IntelliSense - JSON validation schema](#intellisense---json-validation-schema)
 
 ## Getting started (Tutorial)
 
@@ -1177,6 +1178,14 @@ cfft --template MyTemplate
 ### Placeholders
 
 - **{fileName}** is a special value to indicate that specific text should be replaced with a specified file name (_--fileName_)
+
+### IntelliSense - JSON validation schema
+
+If your `cfft.config.json` file does not have a `$schema` defined, add it as a root-level field:
+
+```json
+"$schema": "https://dus4nstojanovic.github.io/create-files-from-template-base/cfft.config-schema.json",
+```
 
 ## License
 

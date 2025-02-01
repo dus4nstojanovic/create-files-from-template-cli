@@ -1,4 +1,3 @@
-import { Answers } from "inquirer";
 import {
   Config,
   getTemplateFromConfig,
@@ -13,6 +12,7 @@ import {
   setArg,
 } from ".";
 import { Options } from "@beezydev/create-files-from-template-base/options";
+import { Answers } from "../types";
 
 /**
  * Gets all option using the provided configuration, console arguments or inputs
@@ -20,7 +20,7 @@ import { Options } from "@beezydev/create-files-from-template-base/options";
  * @returns All provided options
  */
 export const getOptions = async (config: Config): Promise<Options> => {
-  let answers: Answers = {};
+  let answers: Partial<Answers> = {};
 
   answers = await getTemplateName({ config, answers });
 
@@ -54,14 +54,14 @@ const getSearchAndReplaceItems = ({
   answers,
 }: {
   templateConfig: TemplateConfig | undefined;
-  answers: Answers;
+  answers: Partial<Answers>;
 }) => {
   answers.searchAndReplace = templateConfig?.options?.searchAndReplace?.map(
     (sr) => ({
       ...sr,
       replace: sr.replace?.replace(
         new RegExp("{fileName}", "g"),
-        answers[CLIArg.FILE_NAME]
+        answers[CLIArg.FILE_NAME] as string
       ),
     })
   );
@@ -74,8 +74,8 @@ const getTemplateName = async ({
   answers,
 }: {
   config: Config;
-  answers: Answers;
-}): Promise<Answers> => {
+  answers: Partial<Answers>;
+}): Promise<Partial<Answers>> => {
   if (!config.defaultTemplateName || hasArg(CLIArg.TEMPLATE_NAME)) {
     answers = await getInputArg({
       arg: CLIArg.TEMPLATE_NAME,
@@ -89,7 +89,9 @@ const getTemplateName = async ({
   return answers;
 };
 
-const getFileName = async (answers: Answers): Promise<Answers> => {
+const getFileName = async (
+  answers: Partial<Answers>
+): Promise<Partial<Answers>> => {
   answers = await getInputArg({
     arg: CLIArg.FILE_NAME,
     message: "Enter file name:",
@@ -104,8 +106,8 @@ const getDirPath = async ({
   answers,
 }: {
   templateConfig: TemplateConfig | undefined;
-  answers: Answers;
-}): Promise<Answers> => {
+  answers: Partial<Answers>;
+}): Promise<Partial<Answers>> => {
   answers = await getInputArg({
     arg: CLIArg.DIR_PATH,
     message: "Enter dir path:",
@@ -122,8 +124,8 @@ const getTemplatePath = async ({
   answers,
 }: {
   templateConfig: TemplateConfig | undefined;
-  answers: Answers;
-}): Promise<Answers> => {
+  answers: Partial<Answers>;
+}): Promise<Partial<Answers>> => {
   answers = await getInputArg({
     arg: CLIArg.TEMPLATE_PATH,
     message: "Enter template path:",
@@ -139,8 +141,8 @@ const getFileNameTextReplacement = async ({
   answers,
 }: {
   templateConfig: TemplateConfig | undefined;
-  answers: Answers;
-}): Promise<Answers> => {
+  answers: Partial<Answers>;
+}): Promise<Partial<Answers>> => {
   const hasFileNameTextToBeReplaced =
     hasArg(CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED) ||
     templateConfig?.options?.[CLIArg.FILE_NAME_TEXT_TO_BE_REPLACED];
@@ -181,8 +183,8 @@ const getFileContentTextReplacement = async ({
   answers,
 }: {
   templateConfig: TemplateConfig | undefined;
-  answers: Answers;
-}): Promise<Answers> => {
+  answers: Partial<Answers>;
+}): Promise<Partial<Answers>> => {
   const hasSearchAndReplaceItems =
     !!templateConfig?.options?.searchAndReplace?.length;
 
@@ -251,8 +253,8 @@ const getSearchAndReplaceCharacter = ({
   answers,
 }: {
   templateConfig: TemplateConfig | undefined;
-  answers: Answers;
-}): Answers => {
+  answers: Partial<Answers>;
+}): Partial<Answers> => {
   answers[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] =
     (extractArg(CLIArg.SEARCH_AND_REPLACE_SEPARATOR) as string) ||
     templateConfig?.options?.[CLIArg.SEARCH_AND_REPLACE_SEPARATOR] ||

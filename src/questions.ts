@@ -1,5 +1,6 @@
-import inquirer, { Answers, Question } from "inquirer";
+import { confirm, input } from "@inquirer/prompts";
 import { isNonEmptyString } from "./validation";
+import { Answers } from "./types";
 
 /**
  * Asks the input (text) question
@@ -9,22 +10,22 @@ import { isNonEmptyString } from "./validation";
  * @param defaultValue The default value to be used if none is provided
  * @returns The updated answers
  */
-export const askInputQuestion = (
+export const askInputQuestion = async (
   name: string,
   message: string,
-  answers: Answers,
+  answers: Partial<Answers>,
   defaultValue?: string
-): Promise<Answers> =>
-  askQuestion(
-    {
-      type: "input",
-      name,
-      message,
-      validate: isNonEmptyString,
-      default: defaultValue,
-    },
-    answers
-  );
+): Promise<Partial<Answers>> => {
+  const answer = await input({
+    message,
+    validate: isNonEmptyString,
+    default: defaultValue,
+  });
+
+  answers = { ...answers, [name]: answer };
+
+  return answers;
+};
 
 /**
  * Asks the confirmation question (yes/no)
@@ -33,25 +34,16 @@ export const askInputQuestion = (
  * @param answers The current answers
  * @returns The updated answers
  */
-export const askConfirmQuestion = (
+export const askConfirmQuestion = async (
   name: string,
   message: string,
-  answers: Answers
-): Promise<Answers> =>
-  askQuestion(
-    {
-      type: "confirm",
-      name,
-      message,
-    },
-    answers
-  );
+  answers: Partial<Answers>
+): Promise<Partial<Answers>> => {
+  const answer = await confirm({
+    message,
+  });
 
-const askQuestion = async (
-  question: Question,
-  answers: Answers
-): Promise<Answers> => {
-  const answer = await inquirer.prompt([question]);
-  answers = { ...answers, ...answer };
+  answers = { ...answers, [name]: answer };
+
   return answers;
 };

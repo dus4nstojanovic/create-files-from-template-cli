@@ -1,9 +1,9 @@
-import { Answers } from "inquirer";
 import { askConfirmQuestion, askInputQuestion } from "../questions";
 import arg from "arg";
 import { isBoolean } from "../validation";
 import { TemplateConfig } from "@beezydev/create-files-from-template-base/config";
 import { BOOLEAN_CLI_ARGS, CLIArg, CLI_ARGS_TYPE } from ".";
+import { Answers } from "../types";
 
 /**
  * Sets the argument and its value
@@ -12,7 +12,11 @@ import { BOOLEAN_CLI_ARGS, CLIArg, CLI_ARGS_TYPE } from ".";
  * @param answers The current answers
  * @returns The updated answers
  */
-export const setArg = (arg: CLIArg, value: any, answers: Answers): Answers => {
+export const setArg = (
+  arg: CLIArg,
+  value: any,
+  answers: Partial<Answers>
+): Partial<Answers> => {
   answers[arg] = value;
   return answers;
 };
@@ -30,11 +34,11 @@ export const setArg = (arg: CLIArg, value: any, answers: Answers): Answers => {
 export const getInputArg = (args: {
   arg: CLIArg;
   message: string;
-  answers: Answers;
+  answers: Partial<Answers>;
   templateConfig?: TemplateConfig;
   defaultValue?: any;
   shouldAsk?: boolean;
-}): Promise<Answers> =>
+}): Promise<Partial<Answers>> =>
   getArg({
     ...args,
     askCallback: askInputQuestion,
@@ -55,11 +59,11 @@ export const getInputArg = (args: {
 export const getConfirmArg = (args: {
   arg: CLIArg;
   message: string;
-  answers: Answers;
+  answers: Partial<Answers>;
   templateConfig?: TemplateConfig;
   defaultValue?: any;
   shouldAsk?: boolean;
-}): Promise<Answers> =>
+}): Promise<Partial<Answers>> =>
   getArg({
     ...args,
     askCallback: askConfirmQuestion,
@@ -80,7 +84,7 @@ export const extractArg = (arg: CLIArg) => getArgs()[`--${arg}`];
  */
 export const hasArg = (arg: CLIArg): boolean => !!extractArg(arg);
 
-const getArgs = (): Answers => {
+const getArgs = (): Partial<Answers> => {
   const args = Object.fromEntries(
     Object.entries(arg(CLI_ARGS_TYPE)).map(([key, value]) => [
       key,
@@ -98,7 +102,10 @@ const getArgs = (): Answers => {
   return args;
 };
 
-const getAnswerFromArgs = (arg: CLIArg, answers: Answers): Answers => {
+const getAnswerFromArgs = (
+  arg: CLIArg,
+  answers: Partial<Answers>
+): Partial<Answers> => {
   const value = extractArg(arg);
   if (value) answers[arg] = value;
   return answers;
@@ -107,8 +114,8 @@ const getAnswerFromArgs = (arg: CLIArg, answers: Answers): Answers => {
 const getAnswerFromConfig = (
   arg: CLIArg,
   templateConfig: TemplateConfig | undefined,
-  answers: Answers
-): Answers => {
+  answers: Partial<Answers>
+): Partial<Answers> => {
   const configValue =
     templateConfig?.options?.[arg as keyof typeof templateConfig.options];
 
@@ -120,7 +127,7 @@ const getAnswerFromConfig = (
 };
 
 /**
- * Gets the argument in the following priority (Args -> Configuratin -> Question and Answer)
+ * Gets the argument in the following priority (Args -> Configuration -> Question and Answer)
  * @param param.arg The argument name
  * @param args.message The question to be asked
  * @param param.askCallback The callback with the question
@@ -144,14 +151,14 @@ const getArg = async ({
   askCallback: (
     name: string,
     message: string,
-    answers: Answers,
+    answers: Partial<Answers>,
     defaultValue?: any
-  ) => Promise<Answers>;
-  answers: Answers;
+  ) => Promise<Partial<Answers>>;
+  answers: Partial<Answers>;
   defaultValue?: any;
   templateConfig: TemplateConfig | undefined;
   shouldAsk?: boolean;
-}): Promise<Answers> => {
+}): Promise<Partial<Answers>> => {
   // Arguments have the priority
   answers = getAnswerFromArgs(arg, answers);
 
@@ -171,7 +178,7 @@ const getArg = async ({
   if (shouldReplace) {
     answers[arg] = (answers[arg] as string).replace(
       new RegExp("{fileName}", "g"),
-      answers[CLIArg.FILE_NAME]
+      answers[CLIArg.FILE_NAME] as string
     );
   }
 
