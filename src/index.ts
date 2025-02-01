@@ -50,6 +50,8 @@ const run = async () => {
 
     Logger.success("💪 Files created!");
   } catch (e) {
+    if ((e as any).name === "ExitPromptError") return;
+
     Logger.error(e);
   }
 };
